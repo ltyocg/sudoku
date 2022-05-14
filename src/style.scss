@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+
+html * {
+  user-select: none;
+}
+
+.board {
+  display: flex;
+  transform: translate(-50%, -50%) scale(0.744);
+  opacity: 1;
+  position: absolute;
+  flex: 1 1 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: Tahoma, Verdana, sans-serif;
+
+  svg {
+    position: absolute;
+    pointer-events: none;
+  }
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  cursor: pointer;
+
+  > .cells {
+    > .row {
+      display: flex;
+      align-items: stretch;
+
+      > .cell {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        font-family: Tahoma, Verdana, sans-serif;
+        opacity: 0;
+
+        &:after {
+          display: block;
+          position: absolute;
+          z-index: 6;
+          width: 100%;
+          height: 100%;
+          content: "";
+          outline: 1px solid black;
+          outline-offset: -0.5px;
+        }
+      }
+    }
+  }
+}

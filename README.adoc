@@ -1,0 +1,3 @@
+= 数独
+
+例子：https://app.crackingthecryptic.com/sudoku/M82nrpghDB

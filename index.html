@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sudoku</title>
+</head>
+<body>
+<div id="app">
+  <div class="game">
+    <div id="board" class="board">
+      <div class="grid">
+        <div class="cells"></div>
+        <svg id="svgrenderer" class="boardsvg" xmlns="http://www.w3.org/2000/svg" style="vector-effect: non-scaling-stroke; width: 672px; height: 704px; margin: -64px 0 0 -48px;" viewBox="-48 -64 672 704">
+          <g id="background"></g>
+          <g id="underlay"></g>
+          <g id="cell-colours"></g>
+          <g id="cell-highlights"></g>
+          <g id="arrows"></g>
+          <g id="cell-grids">
+            <path class="cell-grid" d="M0 0 L576 0 M0 64 L576 64 M0 128 L576 128 M0 192 L576 192 M0 256 L576 256 M0 320 L576 320 M0 384 L576 384 M0 448 L576 448 M0 512 L576 512 M0 576 L576 576 M0 0 L0 576 M64 0 L64 576 M128 0 L128 576 M192 0 L192 576 M256 0 L256 576 M320 0 L320 576 M384 0 L384 576 M448 0 L448 576 M512 0 L512 576 M576 0 L576 576"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M0 0 L96 0 L192 0 L192 96 L192 192 L96 192 L0 192 L0 96 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M0 192 L96 192 L192 192 L192 288 L192 384 L96 384 L0 384 L0 288 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M0 384 L96 384 L192 384 L192 480 L192 576 L96 576 L0 576 L0 480 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M192 0 L288 0 L384 0 L384 96 L384 192 L288 192 L192 192 L192 96 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M192 192 L288 192 L384 192 L384 288 L384 384 L288 384 L192 384 L192 288 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M192 384 L288 384 L384 384 L384 480 L384 576 L288 576 L192 576 L192 480 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M384 0 L480 0 L576 0 L576 96 L576 192 L480 192 L384 192 L384 96 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M384 192 L480 192 L576 192 L576 288 L576 384 L480 384 L384 384 L384 288 Z"></path>
+            <path fill="none" stroke="rgba(0, 0, 0, 1)" stroke-width="3px" class="cage-box" shape-rendering="geometricprecision" vector-effect="non-scaling-stroke" d="M384 384 L480 384 L576 384 L576 480 L576 576 L480 576 L384 576 L384 480 Z"></path>
+          </g>
+          <g id="cell-errors"></g>
+          <g id="overlay">
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="88" y="-40" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="96" y="-31.04" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="-0.5,1.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="344" y="-40" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="352" y="-31.04" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="-0.5,5.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="408" y="-40" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="416" y="-31.04" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="-0.5,6.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="472" y="-40" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="480" y="-31.04" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="-0.5,7.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="600" y="24" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="608" y="32.96" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="0.5,9.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="-40" y="24" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="-32" y="32.96" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="0.5,-0.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="-40" y="344" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="-32" y="352.96" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="5.5,-0.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="-40" y="408" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="-32" y="416.96" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="6.5,-0.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+            <rect rounded="false" fontSize="28" text="?" fill-opacity="0.5" stroke-opacity="0.5" fill="none" stroke="none" stroke-width="0" x="24" y="600" width="16" height="16" opacity="1" class="textbg"></rect>
+            <text x="32" y="608.96" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" center="9.5,0.5" width="0.25" height="0.25" rounded="false" fontSize="32" target="overlay" backgroundColor="undefined" fill="#000" style="font-size: 32px;">?</text>
+          </g>
+          <g id="cell-givens"></g>
+          <g id="cell-pen"></g>
+          <g id="cell-pencilmarks"></g>
+          <g id="cell-candidates"></g>
+          <g id="cell-values">
+            <text x="32" y="35.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="0.5,0.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="96" y="35.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="0.5,1.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="96" y="99.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="1.5,1.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="96" y="163.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="2.5,1.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="160" y="227.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="3.5,2.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="160" y="291.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="4.5,2.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="224" y="291.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="4.5,3.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="288" y="291.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="4.5,4.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="288" y="227.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="3.5,4.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="288" y="163.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="2.5,4.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="288" y="99.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="1.5,4.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="224" y="99.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="1.5,3.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="160" y="163.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="2.5,2.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="224" y="227.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="3.5,3.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="224" y="163.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="2.5,3.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="160" y="99.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="1.5,2.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="32" y="163.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="2.5,0.5" width="1" height="1" fill="#000" class="cell-value"></text>
+            <text x="544" y="163.84" text-anchor="middle" dominant-baseline="middle" stroke="#fff" stroke-width="2px" stroke-linecap="butt" stroke-linejoin="miter" paint-order="stroke fill" target="cell-values" className="cell-value" center="2.5,8.5" width="1" height="1" fill="#000" class="cell-value"></text>
+          </g>
+        </svg>
+        <a id="svenpeek" href="https://patreon.svencodes.com/"></a>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
