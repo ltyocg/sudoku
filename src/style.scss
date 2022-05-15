@@ -6,9 +6,27 @@ html * {
   user-select: none;
 }
 
+#app {
+  width: 100%;
+  height: 98vh;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.game {
+  width: 100%;
+  display: flex;
+  flex: 1 0 auto;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  margin: 0;
+}
+
 .board {
   display: flex;
-  transform: translate(-50%, -50%) scale(0.744);
+  transform: translate(-50%, -50%);
   opacity: 1;
   position: absolute;
   flex: 1 1 100%;
@@ -20,6 +38,15 @@ html * {
   svg {
     position: absolute;
     pointer-events: none;
+  }
+
+  .cell-grid {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1;
+    stroke-linecap: butt;
+    stroke-linejoin: bevel;
+    vector-effect: non-scaling-stroke;
   }
 }
 
