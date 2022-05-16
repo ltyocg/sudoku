@@ -36,34 +36,51 @@ export default class Selection {
       pathEl.setAttribute('shape-rendering', 'geometricprecision')
       pathEl.setAttribute('vector-effect', 'non-scaling-stroke')
     }
-    type LineSegment = {
-      x0: number
-      y0: number
-      x1: number
-      y1: number
+
+    interface Point {
+      x: number
+      y: number
     }
+
+    interface LineSegment {
+      p0: Point
+      p1: Point
+    }
+
     const lineSegmentArray: LineSegment[] = []
     for (let k in this.checkedCells) {
       const i = parseInt(k)
       const x = i % 9
       const y = Math.floor(i / 9)
       if (this.checkedCells[i]) {
-        if (y === 0 || !this.checkedCells[i - 9]) lineSegmentArray.push(lineSegment(0, x, y))
-        if (x === 8 || !this.checkedCells[i + 1]) lineSegmentArray.push(lineSegment(1, x, y))
-        if (y === 8 || !this.checkedCells[i + 9]) lineSegmentArray.push(lineSegment(2, x, y))
-        if (x === 0 || !this.checkedCells[i - 1]) lineSegmentArray.push(lineSegment(3, x, y))
+        let b = 0
+        if (x !== 0 && y !== 0 && this.checkedCells[i - 10]) b |= 0x01
+        if (y !== 0 && this.checkedCells[i - 9]) b |= 0x02
+        if (x !== 8 && y !== 0 && this.checkedCells[i - 8]) b |= 0x04
+        if (x !== 8 && this.checkedCells[i + 1]) b |= 0x08
+        if (x !== 8 && y !== 8 && this.checkedCells[i + 10]) b |= 0x10
+        if (y !== 8 && this.checkedCells[i + 9]) b |= 0x20
+        if (x !== 0 && y !== 8 && this.checkedCells[i + 8]) b |= 0x40
+        if (x !== 0 && this.checkedCells[i - 1]) b |= 0x80
+        lineSegmentArray.push(...lineSegment(x, y, b))
       }
     }
-    pathEl.setAttribute('d', lineSegmentArray.map((p) => `M${p.x0} ${p.y0} L${p.x1} ${p.y1} Z`).join(' '))
+    pathEl.setAttribute('d', lineSegmentArray.map((l) => `M${l.p0.x} ${l.p0.y} L${l.p1.x} ${l.p1.y} Z`).join(' '))
 
-    function lineSegment(position: number, x: number, y: number): LineSegment {
-      const r = position & 2 ? 1 + (position & 1 ^ 1) * 6 : 2 + (position & 1) * 9
-      return {
-        x0: x * 64 + 4 + (r >> 3 & 1) * 56,
-        y0: y * 64 + 4 + (r >> 2 & 1) * 56,
-        x1: x * 64 + 4 + (r >> 1 & 1) * 56,
-        y1: y * 64 + 4 + (r & 1) * 56
+    function lineSegment(x: number, y: number, b: number): LineSegment[] {
+      const point = (position: number) => {
+        const pt = position & 2 ? position ^ 1 : position
+        return {
+          x: x * 64 + 4 + (pt & 1) * 56,
+          y: y * 64 + 4 + (pt >> 1 & 1) * 56
+        }
       }
+      const array: LineSegment[] = []
+      if (~b & 0x02) array.push({p0: point(0), p1: point(1)})
+      if (~b & 0x08) array.push({p0: point(1), p1: point(2)})
+      if (~b & 0x20) array.push({p0: point(3), p1: point(2)})
+      if (~b & 0x80) array.push({p0: point(0), p1: point(3)})
+      return array
     }
   }
 }
