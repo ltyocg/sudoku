@@ -1,11 +1,13 @@
 import './style.scss'
 import Selection from './Selection'
+import CellValue from "./CellValue"
 
 const game = document.querySelector<HTMLDivElement>('.game')!
 const board = document.querySelector<HTMLDivElement>('#board')!
 board.style.top = '50%'
 board.style.left = '50%'
 const selection = new Selection(document.querySelector<SVGGElement>('#cell-highlights')!)
+const cellValue = new CellValue(document.querySelector<SVGGElement>('#cell-values')!)
 game.addEventListener('mousedown', (e) => {
   if (!e.composedPath().find((el) => (el as Node).nodeType === Node.ELEMENT_NODE && (el as HTMLDivElement).matches('.grid'))) {
     selection.all(false)
@@ -28,17 +30,27 @@ let currentCell = {x: -1, y: -1}
 let removeMode = false
 let oldCheckedCells = Array.from({length: 81}, () => true)
 document.addEventListener('keydown', (e) => {
-  if (e.metaKey && e.code === 'KeyA') {
+  console.dir(e)
+  if (e.code === 'Backspace') {
+    cellValue.set(selection.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), '')
+    return
+  }
+  if (/Digit\d/.test(e.code)) {
+    cellValue.set(selection.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), e.key)
+    return
+  }
+  if ((e.metaKey || e.ctrlKey) && e.code === 'KeyA') {
     selection.all(true)
     selection.render()
     oldCheckedCells = selection.checkedCells
+    return
   }
 })
 
 function addMouseEvent(cell: HTMLDivElement, x: number, y: number) {
   cell.addEventListener('mousedown', (e) => {
     mouseDown = true
-    if (e.metaKey) removeMode = selection.get(x, y)
+    if (e.metaKey || e.ctrlKey) removeMode = selection.get(x, y)
     else selection.all(false)
     selectHandler(e, true)
   })
@@ -77,8 +89,6 @@ function selectEndHandler() {
 }
 
 function arrayEquals(a: boolean[], b: boolean[]) {
-  for (let i = 0; i < 81; i++) {
-    if (a[i] !== b[i]) return false
-  }
+  for (let i = 0; i < 81; i++) if (a[i] !== b[i]) return false
   return true
 }
