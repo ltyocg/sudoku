@@ -91,6 +91,14 @@ html * {
   fill: #1d6ae5;
 }
 
+.cell-given {
+  font-size: 3rem;
+  stroke-width: 1px;
+  stroke: rgba(158, 193, 260, 0.7);
+  color: black;
+  fill: black;
+}
+
 #cell-givens, #cell-values, #cell-candidates, #cell-pencilmarks {
   text-transform: uppercase;
 }

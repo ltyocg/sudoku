@@ -1,17 +1,17 @@
 import './style.scss'
-import Selection from './Selection'
-import CellValue from "./CellValue"
+import Highlights from './Highlights'
+import CellValues from './CellValues'
 
 const game = document.querySelector<HTMLDivElement>('.game')!
 const board = document.querySelector<HTMLDivElement>('#board')!
 board.style.top = '50%'
 board.style.left = '50%'
-const selection = new Selection(document.querySelector<SVGGElement>('#cell-highlights')!)
-const cellValue = new CellValue(document.querySelector<SVGGElement>('#cell-values')!)
+const highlights = new Highlights(document.querySelector<SVGGElement>('#cell-highlights')!)
+const cellValues = new CellValues(document.querySelector<SVGGElement>('#cell-values')!)
 game.addEventListener('mousedown', (e) => {
   if (!e.composedPath().find((el) => (el as Node).nodeType === Node.ELEMENT_NODE && (el as HTMLDivElement).matches('.grid'))) {
-    selection.all(false)
-    selection.render()
+    highlights.all(false)
+    highlights.render()
   }
 })
 
@@ -30,19 +30,18 @@ let currentCell = {x: -1, y: -1}
 let removeMode = false
 let oldCheckedCells = Array.from({length: 81}, () => true)
 document.addEventListener('keydown', (e) => {
-  console.dir(e)
   if (e.code === 'Backspace') {
-    cellValue.set(selection.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), '')
+    cellValues.set(highlights.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), '')
     return
   }
   if (/Digit\d/.test(e.code)) {
-    cellValue.set(selection.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), e.key)
+    cellValues.set(highlights.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), e.key)
     return
   }
   if ((e.metaKey || e.ctrlKey) && e.code === 'KeyA') {
-    selection.all(true)
-    selection.render()
-    oldCheckedCells = selection.checkedCells
+    highlights.all(true)
+    highlights.render()
+    oldCheckedCells = highlights.checkedCells
     return
   }
 })
@@ -50,16 +49,16 @@ document.addEventListener('keydown', (e) => {
 function addMouseEvent(cell: HTMLDivElement, x: number, y: number) {
   cell.addEventListener('mousedown', (e) => {
     mouseDown = true
-    if (e.metaKey || e.ctrlKey) removeMode = selection.get(x, y)
-    else selection.all(false)
+    if (e.metaKey || e.ctrlKey) removeMode = highlights.get(x, y)
+    else highlights.all(false)
     selectHandler(e, true)
   })
   cell.addEventListener('mouseup', (_) => {
     //只有一个格子选中，再次点击时，取消选中
-    if (arrayEquals(oldCheckedCells, selection.checkedCells)
-      && selection.checkedCells.filter((_, index) => index !== y * 9 + x).every((b) => !b)) {
-      selection.set(x, y, false)
-      selection.render()
+    if (arrayEquals(oldCheckedCells, highlights.checkedCells)
+      && highlights.checkedCells.filter((_, index) => index !== y * 9 + x).every((b) => !b)) {
+      highlights.set(x, y, false)
+      highlights.render()
     }
     selectEndHandler()
   })
@@ -75,8 +74,8 @@ function addMouseEvent(cell: HTMLDivElement, x: number, y: number) {
 
   function selectHandler(_: MouseEvent, availableArea: boolean) {
     if (availableArea) {
-      selection.set(x, y, !removeMode)
-      selection.render()
+      highlights.set(x, y, !removeMode)
+      highlights.render()
     }
   }
 }
@@ -85,7 +84,7 @@ function selectEndHandler() {
   mouseDown = false
   currentCell = {x: -1, y: -1}
   removeMode = false
-  oldCheckedCells = selection.checkedCells
+  oldCheckedCells = highlights.checkedCells
 }
 
 function arrayEquals(a: boolean[], b: boolean[]) {

@@ -1,4 +1,4 @@
-export default class Selection {
+export default class Highlights {
   checkedCells: boolean[] = []
   readonly #target: SVGGElement
 
@@ -68,25 +68,21 @@ export default class Selection {
     pathEl.setAttribute('d', lineSegmentArray.map((l) => `M${l.p0.x} ${l.p0.y} L${l.p1.x} ${l.p1.y} Z`).join(' '))
 
     function lineSegment(x: number, y: number, b: number): LineSegment[] {
-      const point = (position: number) => {
-        const pt = position & 2 ? position ^ 1 : position
-        return {
-          x: x * 64 + 4 + (pt & 1) * 56,
-          y: y * 64 + 4 + (pt >> 1 & 1) * 56
-        }
-      }
+      const pointX = (position: number) => x * 64 + 4 + ((position & 2 ? position ^ 1 : position) & 1) * 56
+      const pointY = (position: number) => y * 64 + 4 + (position >> 1 & 1) * 56
+      const point = (position: number) => ({x: pointX(position), y: pointY(position)})
       const array: LineSegment[] = []
-      if (b & 0x80 && ~b & 0x03) array.push({p0: {x: x * 64, y: point(0).y}, p1: point(0)})
-      if (b & 0x02 && ~b & 0x81) array.push({p0: {x: point(0).x, y: y * 64}, p1: point(0)})
+      if (b & 0x80 && ~b & 0x03) array.push({p0: {x: x * 64, y: pointY(0)}, p1: point(0)})
+      if (b & 0x02 && ~b & 0x81) array.push({p0: {x: pointX(0), y: y * 64}, p1: point(0)})
       if (~b & 0x02) array.push({p0: point(0), p1: point(1)})
-      if (b & 0x02 && ~b & 0x0c) array.push({p0: {x: point(1).x, y: y * 64}, p1: point(1)})
-      if (b & 0x08 && ~b & 0x06) array.push({p0: point(1), p1: {x: (x + 1) * 64, y: point(1).y}})
+      if (b & 0x02 && ~b & 0x0c) array.push({p0: {x: pointX(1), y: y * 64}, p1: point(1)})
+      if (b & 0x08 && ~b & 0x06) array.push({p0: point(1), p1: {x: (x + 1) * 64, y: pointY(1)}})
       if (~b & 0x08) array.push({p0: point(1), p1: point(2)})
-      if (b & 0x08 && ~b & 0x18) array.push({p0: point(2), p1: {x: (x + 1) * 64, y: point(2).y}})
-      if (b & 0x20 && ~b & 0x30) array.push({p0: point(2), p1: {x: point(2).x, y: (y + 1) * 64}})
+      if (b & 0x08 && ~b & 0x18) array.push({p0: point(2), p1: {x: (x + 1) * 64, y: pointY(2)}})
+      if (b & 0x20 && ~b & 0x30) array.push({p0: point(2), p1: {x: pointX(2), y: (y + 1) * 64}})
       if (~b & 0x20) array.push({p0: point(3), p1: point(2)})
-      if (b & 0x20 && ~b & 0x60) array.push({p0: point(3), p1: {x: point(3).x, y: (y + 1) * 64}})
-      if (b & 0x80 && ~b & 0xc0) array.push({p0: {x: x * 64, y: point(3).y}, p1: point(3)})
+      if (b & 0x20 && ~b & 0x60) array.push({p0: point(3), p1: {x: pointX(3), y: (y + 1) * 64}})
+      if (b & 0x80 && ~b & 0xc0) array.push({p0: {x: x * 64, y: pointY(3)}, p1: point(3)})
       if (~b & 0x80) array.push({p0: point(0), p1: point(3)})
       return array
     }

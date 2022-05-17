@@ -1,4 +1,4 @@
-export default class CellValue {
+export default class CellValues {
   readonly #target: SVGGElement
   values: string[]
 
