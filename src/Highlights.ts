@@ -1,3 +1,5 @@
+import Coordinate from './Coordinate'
+
 export default class Highlights {
   checkedCells: boolean[] = []
   readonly #target: SVGGElement
@@ -50,8 +52,7 @@ export default class Highlights {
     const lineSegmentArray: LineSegment[] = []
     for (let k in this.checkedCells) {
       const i = parseInt(k)
-      const x = i % 9
-      const y = Math.floor(i / 9)
+      const {x, y} = new Coordinate(i)
       if (this.checkedCells[i]) {
         let b = 0
         if (x !== 0 && y !== 0 && this.checkedCells[i - 10]) b |= 0x01
