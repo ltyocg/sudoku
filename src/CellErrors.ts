@@ -49,11 +49,7 @@ export default class CellErrors {
           const o: Record<string, number[]> = {}
           a.forEach((n) => {
             const v = array[n]
-            if (v) {
-              const na = o[v] ?? []
-              na.push(n)
-              o[v] = na
-            }
+            if (v) o[v] = (o[v] ?? []).concat(n)
           })
           return Object.values(o).filter((na) => na.length > 1)
         })

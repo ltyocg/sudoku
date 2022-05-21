@@ -1,4 +1,9 @@
 export default class Coordinate {
+  static equals(o1: Coordinate | null, o2: Coordinate | null) {
+    if (o1 === o2) return true
+    return o1 && o2 && o1.x === o2.x && o1.y === o2.y
+  }
+
   readonly x: number
   readonly y: number
 

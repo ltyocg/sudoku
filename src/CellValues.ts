@@ -41,4 +41,11 @@ export default class CellValues {
     })
     this.onChange(this.values)
   }
+
+  toggle(index: number | number[], value: string) {
+    if (!Array.isArray(index)) index = [index]
+    this.set(index, index
+      .filter((i) => !this.#freezeIndexes.includes(i))
+      .every((i) => this.values[i] === value) ? '' : value)
+  }
 }
