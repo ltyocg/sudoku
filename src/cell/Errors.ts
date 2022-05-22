@@ -1,6 +1,6 @@
-import Coordinate from "./Coordinate"
+import Coordinate from "../Coordinate"
 
-export default class CellErrors {
+export default class Errors {
   readonly #target: SVGGElement
 
   constructor(target: SVGGElement) {

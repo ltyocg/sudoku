@@ -6,6 +6,7 @@ export default class Coordinate {
 
   readonly x: number
   readonly y: number
+  readonly index: number
 
   constructor(index: number)
   constructor(x: number, y: number)
@@ -17,5 +18,6 @@ export default class Coordinate {
       this.x = args[0]
       this.y = args[1]
     }
+    this.index = this.x + this.y * 9
   }
 }

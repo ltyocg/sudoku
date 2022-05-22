@@ -1,6 +1,6 @@
-import Coordinate from "./Coordinate"
+import Coordinate from "../Coordinate"
 
-export default class CellGivens {
+export default class Givens {
   values: string[]
 
   constructor(target: SVGGElement, valueStr: string) {
@@ -25,7 +25,7 @@ export default class CellGivens {
     function valueParse(str: string): string[] {
       let at = 0, ch = ''
       const r: string[] = []
-      const error = (m?: string) => {
+      const error = (m?: string): never => {
         throw new SyntaxError(m)
       }
       const peek = () => str.charAt(at)

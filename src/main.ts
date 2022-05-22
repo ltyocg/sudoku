@@ -1,24 +1,14 @@
 import './style.scss'
-import Highlights from './Highlights'
-import CellValues from './CellValues'
-import CellGivens from './CellGivens'
-import CellErrors from './CellErrors'
-import Cells from './Cells'
+import Cells from './cell/Cells'
 
 const game = document.querySelector<HTMLDivElement>('.game')!
 const board = document.querySelector<HTMLDivElement>('#board')!
-board.style.top = '50%'
-board.style.left = '50%'
-const highlights = new Highlights(document.querySelector<SVGGElement>('#cell-highlights')!)
-const cellErrors = new CellErrors(document.querySelector<SVGGElement>('#cell-errors')!)
-const cellGivens = new CellGivens(document.querySelector<SVGGElement>('#cell-givens')!, '3_6(6)5__18(7)6_37__4(5)1(7)7_3_187(3)9(3)94_5_6_1_52(5)7(7)2_')
-const cellValues = new CellValues(document.querySelector<SVGGElement>('#cell-values')!, cellGivens.values.map((v, index) => v ? index : -1).filter((v) => v >= 0))
-const cells = new Cells(document.querySelector<HTMLDivElement>('.cells')!, highlights)
-cellValues.onChange = (values) => cellErrors.check(cellGivens.values, values)
+const cells = new Cells(document.querySelector<HTMLDivElement>('.cells')!)
+
 game.addEventListener('mousedown', (e) => {
   if (outOfCells(e)) {
-    highlights.all(false)
-    highlights.render()
+    cells.highlights.all(false)
+    cells.highlights.render()
   }
 })
 game.addEventListener('mouseup', (e) => {
@@ -31,21 +21,39 @@ function outOfCells(event: MouseEvent) {
 
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Escape') {
-    highlights.all(false)
-    highlights.render()
+    cells.highlights.all(false)
+    cells.highlights.render()
     return
   }
   if (e.code === 'Backspace') {
-    cellValues.set(highlights.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), '')
+    if (e.metaKey || e.ctrlKey) cells.candidates.clear(cells.highlights.getCheckedIndexes())
+    else cells.values.set(cells.highlights.getCheckedIndexes(), '')
     return
   }
   if (/Digit\d/.test(e.code)) {
-    cellValues.toggle(highlights.checkedCells.map((b, index) => b ? index : -1).filter((v) => v >= 0), e.key)
+    e.preventDefault()
+    if (e.metaKey || e.ctrlKey) {
+      const highlightIndexes = cells.highlights.getCheckedIndexes()
+      cells.candidates.toggle(highlightIndexes.filter((i) => !cells.values.values[i]), e.key)
+    } else {
+      cells.values.toggle(cells.highlights.getCheckedIndexes(), e.key)
+      cells.candidates.clear(cells.highlights.getCheckedIndexes())
+    }
     return
   }
   if ((e.metaKey || e.ctrlKey) && e.code === 'KeyA') {
-    highlights.all(true)
-    highlights.render()
+    cells.highlights.all(true)
+    cells.highlights.render()
     return
   }
 })
+addEventListener('resize', () => {
+  const padding = 50
+  const boardSide = board.clientWidth
+  const scale = (Math.min(document.body.clientWidth, document.body.clientHeight) - padding * 2) / boardSide
+  board.style.transform = `scale(${scale})`
+  board.style.top = `${Math.min((document.body.clientHeight - boardSide * scale) / 2, padding)}px`
+  board.style.left = `${Math.min((document.body.clientWidth - boardSide * scale) / 2, padding)}px`
+  cells.scale = scale
+})
+dispatchEvent(new Event('resize'))

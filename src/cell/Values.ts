@@ -1,6 +1,6 @@
-import Coordinate from './Coordinate'
+import Coordinate from '../Coordinate'
 
-export default class CellValues {
+export default class Values {
   readonly #target: SVGGElement
   readonly #freezeIndexes: number[]
   values: string[]
