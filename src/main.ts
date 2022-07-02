@@ -19,6 +19,7 @@ function outOfCells(event: MouseEvent) {
   return !event.composedPath().find((el) => (el as Node).nodeType === Node.ELEMENT_NODE && (el as HTMLDivElement).matches('.grid'))
 }
 
+const isMac = navigator.userAgent.includes('Mac')
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Escape') {
     cells.highlights.all(false)
@@ -26,13 +27,13 @@ document.addEventListener('keydown', (e) => {
     return
   }
   if (e.code === 'Backspace') {
-    if (e.metaKey || e.ctrlKey) cells.candidates.clear(cells.highlights.getCheckedIndexes())
+    if (isMac ? e.metaKey : e.ctrlKey) cells.candidates.clear(cells.highlights.getCheckedIndexes())
     else cells.values.set(cells.highlights.getCheckedIndexes(), '')
     return
   }
   if (/Digit\d/.test(e.code)) {
     e.preventDefault()
-    if (e.metaKey || e.ctrlKey) {
+    if (isMac ? e.metaKey : e.ctrlKey) {
       const highlightIndexes = cells.highlights.getCheckedIndexes()
       cells.candidates.toggle(highlightIndexes.filter((i) => !cells.values.values[i]), e.key)
     } else {
@@ -41,7 +42,7 @@ document.addEventListener('keydown', (e) => {
     }
     return
   }
-  if ((e.metaKey || e.ctrlKey) && e.code === 'KeyA') {
+  if ((isMac ? e.metaKey : e.ctrlKey) && e.code === 'KeyA') {
     cells.highlights.all(true)
     cells.highlights.render()
     return

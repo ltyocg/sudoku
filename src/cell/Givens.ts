@@ -1,10 +1,10 @@
 import Coordinate from "../Coordinate"
 
 export default class Givens {
-  values: string[]
+  readonly values: string[]
 
   constructor(target: SVGGElement, valueStr: string) {
-    this.values = valueParse(valueStr)
+    this.values = valueParse(valueStr.replaceAll(' ', ''))
     this.values.forEach((value, i) => {
       if (!value) return
       const cellText = target.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'text'))

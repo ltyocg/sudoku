@@ -10,13 +10,13 @@ export default class Coordinate {
 
   constructor(index: number)
   constructor(x: number, y: number)
-  constructor(...args: number[]) {
-    if (args.length === 1) {
-      this.x = args[0] % 9
-      this.y = Math.floor(args[0] / 9)
+  constructor(arg0: number, arg1?: number) {
+    if (typeof arg1 === 'undefined') {
+      this.x = arg0 % 9
+      this.y = Math.floor(arg0 / 9)
     } else {
-      this.x = args[0]
-      this.y = args[1]
+      this.x = arg0
+      this.y = arg1
     }
     this.index = this.x + this.y * 9
   }

@@ -3,13 +3,12 @@ import Coordinate from '../Coordinate'
 export default class Values {
   readonly #target: SVGGElement
   readonly #freezeIndexes: number[]
-  values: string[]
+  values = Array.from({length: 81}, () => '')
   onChange: (values: string[]) => void = () => undefined
 
   constructor(target: SVGGElement, freezeIndexes: number[]) {
     this.#target = target
     this.#freezeIndexes = freezeIndexes
-    this.values = Array.from({length: 81}, () => '')
   }
 
   set(index: number | number[], value: string) {

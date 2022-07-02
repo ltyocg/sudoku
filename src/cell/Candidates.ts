@@ -3,12 +3,11 @@ import Coordinate from '../Coordinate'
 export default class Candidates {
   readonly #target: SVGGElement
   readonly #freezeIndexes: number[]
-  values: Set<string>[]
+  values = Array.from({length: 81}, () => new Set<string>())
 
   constructor(target: SVGGElement, freezeIndexes: number[]) {
     this.#target = target
     this.#freezeIndexes = freezeIndexes
-    this.values = Array.from({length: 81}, () => new Set())
   }
 
   toggle(index: number[], value: string) {

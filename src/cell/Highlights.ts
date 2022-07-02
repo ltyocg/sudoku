@@ -5,12 +5,8 @@ class Point {
     return p0.x === p1.x && p0.y === p1.y
   }
 
-  readonly x: number
-  readonly y: number
-
-  constructor(x: number, y: number) {
-    this.x = x
-    this.y = y
+  constructor(readonly x: number,
+              readonly y: number) {
   }
 }
 
@@ -76,28 +72,28 @@ export default class Highlights {
     pathEl.setAttribute('d', combine(pathSegmentArray).map((ps) => {
       const pr: (string | number)[] = []
       pr.push('M', ps[0].x, ps[0].y)
-      ps.slice(1).forEach((p) => pr.push('L', p.x, p.y))
+      for (let i = 1; i < ps.length; i++) {
+        const {x, y} = ps[i]
+        pr.push('L', x, y)
+      }
       pr.push('Z')
       return pr
     }).flat(1).join(' '))
 
     function pathSegment(x: number, y: number, b: number): Point[][] {
-      const pointX = (position: number) => x * 64 + 4 + ((position & 2 ? position ^ 1 : position) & 1) * 56
-      const pointY = (position: number) => y * 64 + 4 + (position >> 1 & 1) * 56
-      const point = (position: number) => ({x: pointX(position), y: pointY(position)})
       const array: Point[][] = []
-      if (b & 0x02 && ~b & 0x81) array.push([point(0), {x: pointX(0), y: y * 64}])
-      if (~b & 0x02) array.push([point(0), point(1)])
-      if (b & 0x02 && ~b & 0x0c) array.push([{x: pointX(1), y: y * 64}, point(1)])
-      if (b & 0x08 && ~b & 0x06) array.push([point(1), {x: (x + 1) * 64, y: pointY(1)}])
-      if (~b & 0x08) array.push([point(1), point(2)])
-      if (b & 0x08 && ~b & 0x30) array.push([{x: (x + 1) * 64, y: pointY(2)}, point(2)])
-      if (b & 0x20 && ~b & 0x18) array.push([point(2), {x: pointX(2), y: (y + 1) * 64}])
-      if (~b & 0x20) array.push([point(2), point(3)])
-      if (b & 0x20 && ~b & 0xc0) array.push([{x: pointX(3), y: (y + 1) * 64}, point(3)])
-      if (b & 0x80 && ~b & 0x60) array.push([point(3), {x: x * 64, y: pointY(3)}])
-      if (~b & 0x80) array.push([point(3), point(0)])
-      if (b & 0x80 && ~b & 0x03) array.push([{x: x * 64, y: pointY(0)}, point(0)])
+      if (b & 0x02 && ~b & 0x81) array.push([new Point(x * 64 + 4, y * 64 + 4), new Point(x * 64 + 4, y * 64)])
+      if (~b & 0x02) array.push([new Point(x * 64 + 4, y * 64 + 4), new Point(x * 64 + 60, y * 64 + 4)])
+      if (b & 0x02 && ~b & 0x0c) array.push([new Point(x * 64 + 60, y * 64), new Point(x * 64 + 60, y * 64 + 4)])
+      if (b & 0x08 && ~b & 0x06) array.push([new Point(x * 64 + 60, y * 64 + 4), new Point((x + 1) * 64, y * 64 + 4)])
+      if (~b & 0x08) array.push([new Point(x * 64 + 60, y * 64 + 4), new Point(x * 64 + 60, y * 64 + 60)])
+      if (b & 0x08 && ~b & 0x30) array.push([new Point((x + 1) * 64, y * 64 + 60), new Point(x * 64 + 60, y * 64 + 60)])
+      if (b & 0x20 && ~b & 0x18) array.push([new Point(x * 64 + 60, y * 64 + 60), new Point(x * 64 + 60, (y + 1) * 64)])
+      if (~b & 0x20) array.push([new Point(x * 64 + 60, y * 64 + 60), new Point(x * 64 + 4, y * 64 + 60)])
+      if (b & 0x20 && ~b & 0xc0) array.push([new Point(x * 64 + 4, (y + 1) * 64), new Point(x * 64 + 4, y * 64 + 60)])
+      if (b & 0x80 && ~b & 0x60) array.push([new Point(x * 64 + 4, y * 64 + 60), new Point(x * 64, y * 64 + 60)])
+      if (~b & 0x80) array.push([new Point(x * 64 + 4, y * 64 + 60), new Point(x * 64 + 4, y * 64 + 4)])
+      if (b & 0x80 && ~b & 0x03) array.push([new Point(x * 64, y * 64 + 4), new Point(x * 64 + 4, y * 64 + 4)])
       return array
     }
 
@@ -110,8 +106,8 @@ export default class Highlights {
           if (!base.length) continue
           for (let j = i + 1; j < ps.length; j++) {
             const target = ps[j]
-            if (target.length && Point.equals(base.at(-1)!, ps[j][0])) {
-              base.push(...ps[j].slice(1))
+            if (target.length && Point.equals(base.at(-1)!, target[0])) {
+              for (let k = 1; k < target.length; k++) base.push(target[k])
               ps[j] = []
               flag = true
             }

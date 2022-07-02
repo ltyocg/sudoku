@@ -15,11 +15,11 @@ class HoverCell {
 }
 
 export default class Cells {
-  highlights: Highlights
-  errors: Errors
-  givens: Givens
-  candidates: Candidates
-  values: Values
+  readonly highlights: Highlights
+  readonly errors: Errors
+  readonly givens: Givens
+  readonly candidates: Candidates
+  readonly values: Values
   scale = 1
   #startCell: Coordinate | null = null
   #removeMode = false
