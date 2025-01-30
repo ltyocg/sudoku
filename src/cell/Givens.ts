@@ -1,4 +1,4 @@
-import Coordinate from "../Coordinate"
+import Coordinate from '../Coordinate'
 
 export default class Givens {
   readonly values: string[]

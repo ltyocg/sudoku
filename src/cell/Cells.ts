@@ -39,7 +39,7 @@ export default class Cells {
     const freezeIndexes = this.givens.values.map((v, index) => v ? index : -1).filter((v) => v >= 0)
     this.candidates = new Candidates(document.querySelector<SVGGElement>('#cell-candidates')!, freezeIndexes)
     this.values = new Values(document.querySelector<SVGGElement>('#cell-values')!, freezeIndexes)
-    this.values.onChange = (values) => this.errors.check(this.givens.values, values)
+    this.values.onChange = values => this.errors.check(this.givens.values, values)
     HoverCell.onChange = (_, newCell) => {
       if (!this.#startCell) return
       if (newCell) {
@@ -51,21 +51,21 @@ export default class Cells {
       const {x, y} = target.getBoundingClientRect()
       return new Coordinate(Math.floor((event.clientX - x) / 64 / this.scale), Math.floor((event.clientY - y) / 64 / this.scale))
     }
-    target.addEventListener('mousedown', (e) => {
-      this.#startCell = getCoordinate(e)
-      if (e.metaKey || e.ctrlKey) this.#removeMode = this.highlights.get(this.#startCell.x, this.#startCell.y)
+    target.addEventListener('mousedown', event => {
+      this.#startCell = getCoordinate(event)
+      if (event.metaKey || event.ctrlKey) this.#removeMode = this.highlights.get(this.#startCell.x, this.#startCell.y)
       else this.highlights.all(false)
       HoverCell.set(this.#startCell)
     })
-    target.addEventListener('mousemove', (e) => {
+    target.addEventListener('mousemove', event => {
       if (!this.#startCell) return
-      if ((e.offsetX - 32) ** 2 + (e.offsetY - 32) ** 2 > 29 ** 2) return
-      HoverCell.set(getCoordinate(e))
+      if ((event.offsetX - 32) ** 2 + (event.offsetY - 32) ** 2 > 29 ** 2) return
+      HoverCell.set(getCoordinate(event))
     })
     target.addEventListener('mouseup', () => this.reset())
-    target.addEventListener('dblclick', (e) => {
+    target.addEventListener('dblclick', event => {
       const allValues = this.values.values.map((v, index) => this.givens.values[index] || v)
-      const value = allValues[getCoordinate(e).index]
+      const value = allValues[getCoordinate(event).index]
       if (!value) return
       allValues.forEach((v, i) => {
         const {x, y} = new Coordinate(i)

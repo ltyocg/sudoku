@@ -14,8 +14,8 @@ export default class Values {
   set(index: number | number[], value: string) {
     if (!Array.isArray(index)) index = [index]
     index
-      .filter((i) => !this.#freezeIndexes.includes(i))
-      .forEach((i) => this.values[i] = value)
+      .filter(i => !this.#freezeIndexes.includes(i))
+      .forEach(i => this.values[i] = value)
     this.values.forEach((value, i) => {
       let cellText = this.#target.querySelector<SVGTextElement>(`text[data-index="${i}"]`)
       if (cellText) {
@@ -44,7 +44,7 @@ export default class Values {
   toggle(index: number | number[], value: string) {
     if (!Array.isArray(index)) index = [index]
     this.set(index, index
-      .filter((i) => !this.#freezeIndexes.includes(i))
-      .every((i) => this.values[i] === value) ? '' : value)
+      .filter(i => !this.#freezeIndexes.includes(i))
+      .every(i => this.values[i] === value) ? '' : value)
   }
 }

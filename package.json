@@ -4,16 +4,15 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -b && vite build",
     "preview": "vite preview"
-  },
-  "devDependencies": {
-    "@types/snapsvg": "^0.5.2",
-    "sass": "^1.53.0",
-    "typescript": "^4.7.4",
-    "vite": "^2.9.13"
   },
   "dependencies": {
     "snapsvg": "^0.5.1"
+  },
+  "devDependencies": {
+    "@types/snapsvg": "^0.5.8",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11"
   }
 }

@@ -12,11 +12,11 @@ export default class Candidates {
 
   toggle(index: number[], value: string) {
     const remove = index
-      .filter((i) => !this.#freezeIndexes.includes(i))
-      .every((i) => this.values[i].has(value))
+      .filter(i => !this.#freezeIndexes.includes(i))
+      .every(i => this.values[i].has(value))
     index
-      .filter((i) => !this.#freezeIndexes.includes(i))
-      .forEach((i) => {
+      .filter(i => !this.#freezeIndexes.includes(i))
+      .forEach(i => {
         if (remove) this.values[i].delete(value)
         else this.values[i].add(value)
       })
@@ -25,8 +25,8 @@ export default class Candidates {
 
   clear(index: number[]) {
     index
-      .filter((i) => !this.#freezeIndexes.includes(i))
-      .forEach((i) => this.values[i].clear())
+      .filter(i => !this.#freezeIndexes.includes(i))
+      .forEach(i => this.values[i].clear())
     this.#render()
   }
 

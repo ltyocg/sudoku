@@ -37,15 +37,15 @@ export default class Highlights {
   }
 
   render() {
-    if (this.checkedCells.every((b) => !b)) {
+    if (this.checkedCells.every(b => !b)) {
       this.#target.innerHTML = ''
       return
     }
     let pathEl = this.#target.firstElementChild as SVGPathElement
     if (!pathEl) {
       pathEl = this.#target.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'path'))
-      pathEl.setAttribute('fill', 'rgba(255, 255, 255, 0.4)')
-      pathEl.setAttribute('stroke', 'rgba(0, 126, 255, 0.7)')
+      pathEl.setAttribute('fill', 'rgba(255 255 255 / 0.4)')
+      pathEl.setAttribute('stroke', 'rgba(0 126 255 / 0.7)')
       pathEl.setAttribute('stroke-width', '8px')
       pathEl.setAttribute('stroke-linecap', 'butt')
       pathEl.setAttribute('stroke-linejoin', 'round')
@@ -70,8 +70,7 @@ export default class Highlights {
       }
     }
     pathEl.setAttribute('d', combine(pathSegmentArray).map((ps) => {
-      const pr: (string | number)[] = []
-      pr.push('M', ps[0].x, ps[0].y)
+      const pr: (string | number)[] = ['M', ps[0].x, ps[0].y]
       for (let i = 1; i < ps.length; i++) {
         const {x, y} = ps[i]
         pr.push('L', x, y)
@@ -113,10 +112,10 @@ export default class Highlights {
             }
           }
         }
-        ps = ps.filter((psc) => psc.length)
+        ps = ps.filter(psc => psc.length)
       }
       while (flag)
-      return ps.map((psc) => {
+      return ps.map(psc => {
         const r: Point[] = []
         for (let i = 0; i < psc.length; i++) {
           if (i >= psc.length - 2) return r.concat(psc.slice(i))

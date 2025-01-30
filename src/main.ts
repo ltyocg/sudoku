@@ -1,48 +1,48 @@
-import './style.scss'
+import './style.css'
 import Cells from './cell/Cells'
 
 const game = document.querySelector<HTMLDivElement>('.game')!
 const board = document.querySelector<HTMLDivElement>('#board')!
 const cells = new Cells(document.querySelector<HTMLDivElement>('.cells')!)
 
-game.addEventListener('mousedown', (e) => {
-  if (outOfCells(e)) {
+game.addEventListener('mousedown', event => {
+  if (outOfCells(event)) {
     cells.highlights.all(false)
     cells.highlights.render()
   }
 })
-game.addEventListener('mouseup', (e) => {
-  if (outOfCells(e)) cells.reset()
+game.addEventListener('mouseup', event => {
+  if (outOfCells(event)) cells.reset()
 })
 
 function outOfCells(event: MouseEvent) {
-  return !event.composedPath().find((el) => (el as Node).nodeType === Node.ELEMENT_NODE && (el as HTMLDivElement).matches('.grid'))
+  return !event.composedPath().find(eventTarget => eventTarget instanceof HTMLDivElement && eventTarget.matches('.grid'))
 }
 
 const isMac = navigator.userAgent.includes('Mac')
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Escape') {
+document.addEventListener('keydown', event => {
+  if (event.code === 'Escape') {
     cells.highlights.all(false)
     cells.highlights.render()
     return
   }
-  if (e.code === 'Backspace') {
-    if (isMac ? e.metaKey : e.ctrlKey) cells.candidates.clear(cells.highlights.getCheckedIndexes())
+  if (event.code === 'Backspace') {
+    if (isMac ? event.metaKey : event.ctrlKey) cells.candidates.clear(cells.highlights.getCheckedIndexes())
     else cells.values.set(cells.highlights.getCheckedIndexes(), '')
     return
   }
-  if (/Digit\d/.test(e.code)) {
-    e.preventDefault()
-    if (isMac ? e.metaKey : e.ctrlKey) {
+  if (/Digit\d/.test(event.code)) {
+    event.preventDefault()
+    if (isMac ? event.metaKey : event.ctrlKey) {
       const highlightIndexes = cells.highlights.getCheckedIndexes()
-      cells.candidates.toggle(highlightIndexes.filter((i) => !cells.values.values[i]), e.key)
+      cells.candidates.toggle(highlightIndexes.filter((i) => !cells.values.values[i]), event.key)
     } else {
-      cells.values.toggle(cells.highlights.getCheckedIndexes(), e.key)
+      cells.values.toggle(cells.highlights.getCheckedIndexes(), event.key)
       cells.candidates.clear(cells.highlights.getCheckedIndexes())
     }
     return
   }
-  if ((isMac ? e.metaKey : e.ctrlKey) && e.code === 'KeyA') {
+  if ((isMac ? event.metaKey : event.ctrlKey) && event.code === 'KeyA') {
     cells.highlights.all(true)
     cells.highlights.render()
     return
@@ -52,9 +52,9 @@ addEventListener('resize', () => {
   const padding = 50
   const boardSide = board.clientWidth
   const scale = (Math.min(document.body.clientWidth, document.body.clientHeight) - padding * 2) / boardSide
-  board.style.transform = `scale(${scale})`
-  board.style.top = `${Math.min((document.body.clientHeight - boardSide * scale) / 2, padding)}px`
-  board.style.left = `${Math.min((document.body.clientWidth - boardSide * scale) / 2, padding)}px`
+  board.attributeStyleMap.set('transform', `scale(${scale})`)
+  board.attributeStyleMap.set('top', `${Math.min((document.body.clientHeight - boardSide * scale) / 2, padding)}px`)
+  board.attributeStyleMap.set('left', `${Math.min((document.body.clientWidth - boardSide * scale) / 2, padding)}px`)
   cells.scale = scale
 })
 dispatchEvent(new Event('resize'))

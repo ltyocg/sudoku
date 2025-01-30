@@ -1,4 +1,4 @@
-import Coordinate from "../Coordinate"
+import Coordinate from '../Coordinate'
 
 export default class Errors {
   readonly #target: SVGGElement
@@ -44,14 +44,14 @@ export default class Errors {
 
     function checkBlock(splitter: (a: number[], i: number) => number[]): number[] {
       return Array.from({length: 9}, (_, i) => i)
-        .map((i) => splitter(numberArray, i))
-        .map((a) => {
+        .map(i => splitter(numberArray, i))
+        .map(a => {
           const o: Record<string, number[]> = {}
           a.forEach((n) => {
             const v = array[n]
             if (v) o[v] = (o[v] ?? []).concat(n)
           })
-          return Object.values(o).filter((na) => na.length > 1)
+          return Object.values(o).filter(na => na.length > 1)
         })
         .flat(2)
     }
