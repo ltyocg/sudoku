@@ -11,14 +11,7 @@ export default class Givens {
       cellText.textContent = value
       const {x, y} = new Coordinate(i)
       cellText.setAttribute('x', String(x * 64 + 32))
-      cellText.setAttribute('y', String(y * 64 + 35.84))
-      cellText.setAttribute('text-anchor', 'middle')
-      cellText.setAttribute('dominant-baseline', 'middle')
-      cellText.setAttribute('stroke', '#fff')
-      cellText.setAttribute('stroke-width', '2px')
-      cellText.setAttribute('stroke-linecap', 'butt')
-      cellText.setAttribute('stroke-linejoin', 'miter')
-      cellText.setAttribute('fill', '#000')
+      cellText.setAttribute('y', String(y * 64 + 35.8))
       cellText.classList.add('cell-given')
     })
 

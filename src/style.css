@@ -115,6 +115,14 @@ button {
       height: 704px;
       margin: -64px 0 0 -48px;
 
+      text {
+        text-anchor: middle;
+        dominant-baseline: middle;
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+        paint-order: stroke fill;
+      }
+
       #cell-givens, #cell-values, #cell-candidates, #cell-pencilmarks {
         text-transform: uppercase;
       }

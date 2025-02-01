@@ -2,5 +2,5 @@
 
 例子：
 
-- https://app.crackingthecryptic.com/sudoku/M82nrpghDB
-- https://app.crackingthecryptic.com/sudoku/Rmrqr7Dt84
+- https://sudokupad.app/M82nrpghDB
+- https://sudokupad.app/Rmrqr7Dt84

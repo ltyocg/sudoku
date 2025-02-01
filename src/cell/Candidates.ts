@@ -40,7 +40,7 @@ export default class Candidates {
         const cellText = this.#target.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'text'))
         const {x, y} = new Coordinate(i)
         cellText.setAttribute('x', String(x * 64 + 32))
-        cellText.setAttribute('y', String(y * 64 + 35.84))
+        cellText.setAttribute('y', String(y * 64 + 35.8))
         cellText.setAttribute('text-anchor', 'middle')
         cellText.setAttribute('dominant-baseline', 'middle')
         cellText.setAttribute('stroke', '#fff')
