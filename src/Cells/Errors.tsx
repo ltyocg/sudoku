@@ -1,12 +1,12 @@
 import {useCells} from './CellsProvider.tsx'
 import Coordinate from '../Coordinate.ts'
-import {initCellArray} from '../util.ts'
+import {arrayMap, initCellArray} from '../util.ts'
 import classes from './Errors.module.css'
 
 export default function Errors() {
   const {givens, values} = useCells()
   const all = values.value.map((row, y) => row.map((value, x) => value || givens[y][x]))
-  const errorArray = initCellArray(false)
+  const errorArray = initCellArray(() => false)
   checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(i, index)))
   checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(index, i)))
   checkBlock(index => {
@@ -15,8 +15,9 @@ export default function Errors() {
   })
   return (
     <g>
-      {errorArray.map((row, y) => row.map((value, x) => value && (
+      {arrayMap(errorArray, (value, x, y) => value && (
         <rect
+          key={y * 9 + x}
           className={classes.error}
           x={x * 64}
           y={y * 64}
@@ -24,7 +25,7 @@ export default function Errors() {
           height={64}
           opacity={1}
         />
-      )))}
+      ))}
     </g>
   )
 

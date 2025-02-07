@@ -1,7 +1,7 @@
-import {createContext, type ReactNode, use, useState} from 'react'
+import {createContext, type ReactNode, use, useMemo, useState} from 'react'
 import useHighlights from './useHighlights.tsx'
 import Coordinate from '../Coordinate.ts'
-import {initCellArray} from '../util.ts'
+import {arrayMap, initCellArray} from '../util.ts'
 
 interface Wrapper<T> {
   value: T
@@ -14,6 +14,7 @@ const CellsContext = createContext<{
   pencilMarks: Wrapper<string[][][]>
   candidates: Wrapper<string[][][]>
   values: Wrapper<string[][]>
+  availableValues: Set<string>[][]
 }>(null!)
 
 export function useCells() {
@@ -36,7 +37,34 @@ const givens = (() => {
 })()
 export default function CellsProvider({children}: { children: ReactNode }) {
   const coordinateArray = [...useHighlights().checkedSet].map(i => new Coordinate(i))
-  const [values, setValues] = useState(() => initCellArray(''))
+  const [state, setState] = useState<{
+    colors: string[][][]
+    givens: string[][]
+    pencilMarks: string[][][]
+    candidates: string[][][]
+    values: string[][]
+  }>(() => ({
+    colors: initCellArray(() => []),
+    givens,
+    pencilMarks: initCellArray(() => []),
+    candidates: initCellArray(() => []),
+    values: initCellArray(() => '')
+  }))
+  const availableValues = useMemo(() => {
+    const all = state.values.map((row, y) => row.map((value, x) => value || givens[y][x]))
+    const result = initCellArray(() => new Set(Array.from({length: 9}, (_, i) => `${i + 1}`)))
+    arrayMap(all, (value, x, y) => {
+      if (!value) return
+      result[y][x].clear()
+      Array.from({length: 9}).forEach((_, i) => {
+        result[y][i].delete(value)
+        result[i][x].delete(value)
+      })
+      const xb = Math.floor(x / 3), yb = Math.floor(y / 3)
+      Array.from({length: 3}, (_, y) => Array.from({length: 3}, (_, x) => result[yb * 3 + y][xb * 3 + x].delete(value)))
+    })
+    return result
+  }, [state.givens, state.values])
   return (
     <CellsContext
       value={{
@@ -50,35 +78,61 @@ export default function CellsProvider({children}: { children: ReactNode }) {
           set: () => undefined
         },
         candidates: {
-          value: [],
-          set: () => undefined
-        },
-        values: {
-          value: values,
+          value: state.candidates,
           set: value => {
-            let realValue = ''
+            let add = false
             const setterArray: (() => void)[] = []
-            const newValues = structuredClone(values)
+            const candidates = structuredClone(state.candidates)
             for (const {x, y} of coordinateArray) {
-              const given = givens[y][x]
-              if (given) continue
+              if (givens[y][x]) continue
               if (value === '') {
-                if (newValues[y][x] !== '') setterArray.push(() => {
-                  newValues[y][x] = ''
+                if (candidates[y][x].length) setterArray.push(() => {
+                  candidates[y][x] = []
                 })
               } else {
-                if (newValues[y][x] !== value) realValue = value
+                if (!candidates[y][x].includes(value)) add = true
                 setterArray.push(() => {
-                  newValues[y][x] = realValue
+                  const array = candidates[y][x]
+                  if (add) {
+                    if (!array.includes(value)) candidates[y][x] = array.concat(value)
+                  } else candidates[y][x] = array.filter(a => a !== value)
                 })
               }
             }
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
-              setValues(newValues)
+              setState(v => ({...v, candidates}))
             }
           }
-        }
+        },
+        values: {
+          value: state.values,
+          set: value => {
+            let realValue = ''
+            const setterArray: (() => void)[] = []
+            const candidates = structuredClone(state.candidates)
+            const values = structuredClone(state.values)
+            for (const {x, y} of coordinateArray) {
+              if (givens[y][x]) continue
+              if (value === '') {
+                if (values[y][x] !== '') setterArray.push(() => {
+                  values[y][x] = ''
+                })
+              } else {
+                if (values[y][x] !== value) realValue = value
+                setterArray.push(() => {
+                  if (realValue) candidates[y][x] = []
+                  values[y][x] = realValue
+                })
+              }
+            }
+            if (setterArray.length) {
+              setterArray.forEach(setter => setter())
+              setState(v => ({...v, candidates, values}))
+            }
+          }
+        },
+        availableValues
       }}
     >{children}</CellsContext>
   )

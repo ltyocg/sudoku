@@ -6,7 +6,7 @@ import {useCells} from '../Cells/CellsProvider.tsx'
 
 export default function ControlsMain() {
   const [toolName, setToolName] = useState('normal')
-  const {values} = useCells()
+  const {candidates, values} = useCells()
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       if (/Digit\d/.test(event.code)) {
@@ -32,12 +32,18 @@ export default function ControlsMain() {
               case 'normal':
                 values.set(value)
                 break
+              case 'centre':
+                candidates.set(value)
+                break
             }
           }}
           onDelete={() => {
             switch (toolName) {
               case 'normal':
                 values.set('')
+                break
+              case 'centre':
+                candidates.set('')
                 break
             }
           }}

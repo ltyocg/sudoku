@@ -1,0 +1,26 @@
+.candidate {
+  font-size: 1.3rem;
+  stroke-width: 1px;
+  stroke: rgba(158 193 260 / 0.7);
+  fill: var(--cell-value-color);
+
+  > .conflict {
+    fill: rgba(179, 58, 58, 1);
+  }
+
+  &[data-count="6"] {
+    font-size: 97%;
+  }
+
+  &[data-count="7"] {
+    font-size: 90%;
+  }
+
+  &[data-count="8"] {
+    font-size: 80%;
+  }
+
+  &[data-count="9"] {
+    font-size: 65%;
+  }
+}
