@@ -1,0 +1,154 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+
+  > div {
+    display: flex;
+  }
+
+  .controlsMain {
+    flex-direction: row;
+    --button-size: 4rem;
+
+    > div {
+      display: grid;
+
+      &.controlsInput {
+        grid-template-columns: repeat(3, 1fr);
+
+        &.tool-corner {
+          button.digit {
+            font-size: 1.4rem;
+            display: flex;
+
+            &:where([data-key="2"],[data-key="5"],[data-key="8"],[data-key="0"],[data-key="B"],[data-key="E"],[data-key="H"],[data-key="O"]) {
+              justify-content: center;
+            }
+
+            &:where([data-key="3"],[data-key="6"],[data-key="9"],[data-key="C"],[data-key="F"],[data-key="I"]) {
+              justify-content: flex-end;
+            }
+
+            &:where([data-key="4"],[data-key="5"],[data-key="6"],[data-key="0"],[data-key="D"],[data-key="E"],[data-key="F"],[data-key="O"]) {
+              align-items: center;
+            }
+
+            &:where([data-key="7"],[data-key="8"],[data-key="9"],[data-key="G"],[data-key="H"],[data-key="I"]) {
+              align-items: flex-end;
+            }
+          }
+        }
+
+        &.tool-centre {
+          button.digit {
+            font-size: 1.4rem;
+          }
+        }
+      }
+
+      &.controlsTool {
+        grid-auto-flow: column;
+        grid-template-rows: repeat(4, 1fr);
+      }
+    }
+  }
+
+  .controlsAuxiliary {
+    flex-direction: row;
+    --button-size: 4rem;
+  }
+
+  button {
+    border-radius: 0.5rem;
+    margin: 0.15rem;
+    padding: 0 0.25rem;
+    border: 1px solid rgb(204 204 204);
+    cursor: pointer;
+    background: none;
+    width: var(--button-size);
+    height: var(--button-size);
+
+    .icon {
+      display: inline-flex;
+      vertical-align: middle;
+
+      svg {
+        fill: currentColor;
+      }
+    }
+
+    &.surface {
+      background-color: rgb(238 238 238);
+      color: var(--main-color);
+
+      &.hover {
+        svg {
+          opacity: 0.4;
+        }
+
+        &:hover svg {
+          opacity: unset;
+        }
+      }
+    }
+
+    &.solid {
+      background-color: var(--main-color);
+      color: white;
+
+      &.hover {
+        &:hover {
+          filter: brightness(1.25);
+        }
+      }
+    }
+
+    &:has(.icon) {
+      line-height: var(--button-size);
+      font-size: 0;
+    }
+
+    &:not(:has(.icon)) {
+      font-size: 2rem;
+    }
+
+    &.toggle {
+      padding: .4rem;
+      font-size: 0;
+
+      &[data-digit="true"] {
+        &:before {
+          content: '9';
+          font-size: 1.7rem;
+        }
+
+        &:after {
+          content: '/A';
+          font-size: 1rem;
+        }
+      }
+
+      &[data-digit="false"] {
+        &:before {
+          content: '9/';
+          font-size: 1rem;
+        }
+
+        &:after {
+          content: 'A';
+          font-size: 1.7rem;
+        }
+      }
+    }
+
+    &.color:after {
+      content: "";
+      background-color: currentColor;
+      margin: auto;
+      display: block;
+      width: calc(var(--button-size) * 0.55);
+      height: calc(var(--button-size) * 0.55);
+    }
+  }
+}

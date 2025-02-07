@@ -25,6 +25,11 @@ export default class Cells {
   #removeMode = false
 
   constructor(target: HTMLDivElement) {
+    target.addEventListener('click', () => target.focus())
+    target.addEventListener('blur', () => {
+      this.highlights.all(false)
+      this.highlights.render()
+    })
     for (let y = 0; y < 9; y++) {
       const row = target.appendChild(document.createElement('div'))
       row.classList.add('row')

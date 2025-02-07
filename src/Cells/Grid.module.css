@@ -1,0 +1,4 @@
+.grid > path {
+  fill: none;
+  shape-rendering: geometricPrecision;
+}

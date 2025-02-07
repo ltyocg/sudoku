@@ -1,23 +1,8 @@
 import './style.css'
 import Cells from './cell/Cells'
 
-const game = document.querySelector<HTMLDivElement>('.game')!
 const board = document.querySelector<HTMLDivElement>('#board')!
-const cells = new Cells(document.querySelector<HTMLDivElement>('.cells')!)
-
-game.addEventListener('mousedown', event => {
-  if (outOfCells(event)) {
-    cells.highlights.all(false)
-    cells.highlights.render()
-  }
-})
-game.addEventListener('mouseup', event => {
-  if (outOfCells(event)) cells.reset()
-})
-
-function outOfCells(event: MouseEvent) {
-  return !event.composedPath().find(eventTarget => eventTarget instanceof HTMLDivElement && eventTarget.matches('.grid'))
-}
+const cells = new Cells(document.querySelector<HTMLDivElement>('.Cells')!)
 
 const isMac = navigator.userAgent.includes('Mac')
 document.addEventListener('keydown', event => {

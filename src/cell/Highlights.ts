@@ -55,8 +55,8 @@ export default class Highlights {
     const pathSegmentArray: Point[][] = []
     for (let k in this.checkedCells) {
       const i = parseInt(k)
-      const {x, y} = new Coordinate(i)
       if (this.checkedCells[i]) {
+        const {x, y} = new Coordinate(i)
         let b = 0
         if (x !== 0 && y !== 0 && this.checkedCells[i - 10]) b |= 0x01
         if (y !== 0 && this.checkedCells[i - 9]) b |= 0x02

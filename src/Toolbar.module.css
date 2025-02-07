@@ -1,0 +1,29 @@
+.toolbar {
+  height: 40px;
+  background-color: var(--main-color);
+  display: flex;
+  align-items: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+button.timerControl {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 100%;
+  font-size: 0;
+
+  &:hover {
+    filter: brightness(1.25);
+  }
+
+  > svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+}
