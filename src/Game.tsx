@@ -1,5 +1,6 @@
 import {createContext, type ReactNode, use, useEffect, useRef, useState} from 'react'
 import classes from './App.module.css'
+import {ControlsProvider} from './Controls/useControls.tsx'
 
 interface Size {
   width: number
@@ -26,18 +27,20 @@ export default function Game({children}: { children: ReactNode }) {
   const portraitMode = size.width < size.height
   return (
     <Context value={size}>
-      <div
-        ref={ref}
-        className={classes.game}
-        data-portrait={portraitMode}
-      >
+      <ControlsProvider>
         <div
-          className={classes.board}
-          style={{
-            transform: `scale(1)`
-          }}
-        >{children}</div>
-      </div>
+          ref={ref}
+          className={classes.game}
+          data-portrait={portraitMode}
+        >
+          <div
+            className={classes.board}
+            style={{
+              transform: `scale(1)`
+            }}
+          >{children}</div>
+        </div>
+      </ControlsProvider>
     </Context>
   )
 }

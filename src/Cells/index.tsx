@@ -7,9 +7,26 @@ import useHighlights from './useHighlights.tsx'
 import Values from './Values.tsx'
 import Errors from './Errors.tsx'
 import Candidates from './Candidates.tsx'
+import PencilMarks from './PencilMarks.tsx'
+import useControls from '../Controls/useControls.tsx'
+import {useEffect, useState} from 'react'
+import {ctrlKey} from '../util.ts'
 
 export default function Cells() {
-  const {setCheckedSet} = useHighlights()
+  const {checkedSet, setCheckedSet} = useHighlights()
+  const {multiple} = useControls()
+  const [flag, setFlag] = useState(true)
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (ctrlKey(event) && event.code === 'KeyA') {
+        event.preventDefault()
+        const allCheckedSet = new Set(Array.from({length: 81}, (_, i) => i))
+        setCheckedSet(v => v.intersection(allCheckedSet).size === 81 ? new Set() : allCheckedSet)
+      }
+    }
+    document.addEventListener('keydown', listener)
+    return () => document.removeEventListener('keydown', listener)
+  })
   return (
     <>
       <div>
@@ -20,11 +37,32 @@ export default function Cells() {
                 {x => (
                   <div
                     className={classes.cell}
-                    onMouseDown={() => setCheckedSet(new Set([y * 9 + x]))}
+                    onMouseDown={event => {
+                      const index = y * 9 + x
+                      if (multiple.value || ctrlKey(event)) {
+                        if (checkedSet.has(index)) {
+                          setFlag(false)
+                          setCheckedSet(v => {
+                            const set = new Set(v)
+                            set.delete(index)
+                            return set
+                          })
+                        } else {
+                          setFlag(true)
+                          setCheckedSet(v => new Set(v).add(index))
+                        }
+                      } else setCheckedSet(new Set([index]))
+                    }}
                     onMouseMove={event => {
                       if (event.buttons !== 1) return
                       if ((event.nativeEvent.offsetX - 32) ** 2 + (event.nativeEvent.offsetY - 32) ** 2 > 29 ** 2) return
-                      setCheckedSet(v => new Set(v).add(y * 9 + x))
+                      const index = y * 9 + x
+                      if (flag) setCheckedSet(v => new Set(v).add(index))
+                      else setCheckedSet(v => {
+                        const set = new Set(v)
+                        set.delete(index)
+                        return set
+                      })
                     }}
                   />
                 )}
@@ -47,7 +85,7 @@ export default function Cells() {
         <g id="overlay"></g>
         <Givens/>
         <g id="cell-pen"></g>
-        <g id="cell-pencilmarks"></g>
+        <PencilMarks/>
         <Candidates/>
         <Values/>
       </svg>

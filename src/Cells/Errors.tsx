@@ -4,8 +4,7 @@ import {arrayMap, initCellArray} from '../util.ts'
 import classes from './Errors.module.css'
 
 export default function Errors() {
-  const {givens, values} = useCells()
-  const all = values.value.map((row, y) => row.map((value, x) => value || givens[y][x]))
+  const {all} = useCells()
   const errorArray = initCellArray(() => false)
   checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(i, index)))
   checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(index, i)))

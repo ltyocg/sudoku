@@ -1,0 +1,31 @@
+.pencilMarks {
+  font-size: 1.1rem;
+
+  > text {
+    &.conflict {
+      fill: rgba(179 58 58 / 1);
+    }
+
+    --offset: 16px;
+
+    &:where([data-key="1"],[data-key="4"],[data-key="7"],[data-key="A"],[data-key="D"],[data-key="G"]) {
+      --x: calc(0px - var(--offset));
+    }
+
+    &:where([data-key="3"],[data-key="6"],[data-key="9"],[data-key="C"],[data-key="F"],[data-key="I"]) {
+      --x: var(--offset);
+    }
+
+    &:where([data-key="1"],[data-key="2"],[data-key="3"],[data-key="A"],[data-key="B"],[data-key="C"]) {
+      --y: calc(0px - var(--offset));
+    }
+
+    &:where([data-key="7"],[data-key="8"],[data-key="9"],[data-key="G"],[data-key="H"],[data-key="I"]) {
+      --y: var(--offset);
+    }
+
+    &[data-key] {
+      transform: translate(var(--x, 0), var(--y, 0));
+    }
+  }
+}

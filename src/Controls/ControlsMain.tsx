@@ -3,10 +3,11 @@ import {Centre, Color, Corner, Delete, Digit} from '../icon.tsx'
 import {useEffect, useState} from 'react'
 import IconButton from './IconButton.tsx'
 import {useCells} from '../Cells/CellsProvider.tsx'
+import useControls from './useControls.tsx'
 
 export default function ControlsMain() {
-  const [toolName, setToolName] = useState('normal')
-  const {candidates, values} = useCells()
+  const {toolType} = useControls()
+  const {pencilMarks, candidates, values} = useCells()
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       if (/Digit\d/.test(event.code)) {
@@ -19,18 +20,21 @@ export default function ControlsMain() {
   })
   return (
     <div className={classes.controlsMain}>
-      {toolName === 'color' ? (
+      {toolType.value === 'color' ? (
         <ColorKeyboard
           onInput={console.log}
           onDelete={console.log}
         />
       ) : (
         <DigitKeyboard
-          toolName={toolName}
+          toolType={toolType.value}
           onInput={value => {
-            switch (toolName) {
+            switch (toolType.value) {
               case 'normal':
                 values.set(value)
+                break
+              case 'corner':
+                pencilMarks.set(value)
                 break
               case 'centre':
                 candidates.set(value)
@@ -38,9 +42,12 @@ export default function ControlsMain() {
             }
           }}
           onDelete={() => {
-            switch (toolName) {
+            switch (toolType.value) {
               case 'normal':
                 values.set('')
+                break
+              case 'corner':
+                pencilMarks.set('')
                 break
               case 'centre':
                 candidates.set('')
@@ -58,8 +65,8 @@ export default function ControlsMain() {
         ].map(o => (
           <IconButton
             key={o.value}
-            className={o.value === toolName ? classes.solid : classes.surface}
-            onClick={() => setToolName(o.value)}
+            className={o.value === toolType.value ? classes.solid : classes.surface}
+            onClick={() => toolType.set(o.value)}
           >{o.icon}</IconButton>
         ))}
       </div>
@@ -67,14 +74,14 @@ export default function ControlsMain() {
   )
 }
 
-function DigitKeyboard({toolName, onInput, onDelete}: {
-  toolName: string
+function DigitKeyboard({toolType, onInput, onDelete}: {
+  toolType: string
   onInput: (value: string) => void
   onDelete: () => void
 }) {
   const [digit, setDigit] = useState(true)
   return (
-    <div className={[classes.controlsInput, classes[`tool-${toolName}`]].join(' ')}>
+    <div className={[classes.controlsInput, classes[`tool-${toolType}`]].join(' ')}>
       {(digit
         ? ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
         : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'O']).map(v => (

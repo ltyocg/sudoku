@@ -14,6 +14,7 @@ const CellsContext = createContext<{
   pencilMarks: Wrapper<string[][][]>
   candidates: Wrapper<string[][][]>
   values: Wrapper<string[][]>
+  all: string[][]
   availableValues: Set<string>[][]
 }>(null!)
 
@@ -50,20 +51,20 @@ export default function CellsProvider({children}: { children: ReactNode }) {
     candidates: initCellArray(() => []),
     values: initCellArray(() => '')
   }))
-  const availableValues = useMemo(() => {
+  const {all, availableValues} = useMemo(() => {
     const all = state.values.map((row, y) => row.map((value, x) => value || givens[y][x]))
-    const result = initCellArray(() => new Set(Array.from({length: 9}, (_, i) => `${i + 1}`)))
+    const availableValues = initCellArray(() => new Set(Array.from({length: 9}, (_, i) => `${i + 1}`)))
     arrayMap(all, (value, x, y) => {
       if (!value) return
-      result[y][x].clear()
+      availableValues[y][x].clear()
       Array.from({length: 9}).forEach((_, i) => {
-        result[y][i].delete(value)
-        result[i][x].delete(value)
+        availableValues[y][i].delete(value)
+        availableValues[i][x].delete(value)
       })
       const xb = Math.floor(x / 3), yb = Math.floor(y / 3)
-      Array.from({length: 3}, (_, y) => Array.from({length: 3}, (_, x) => result[yb * 3 + y][xb * 3 + x].delete(value)))
+      Array.from({length: 3}, (_, y) => Array.from({length: 3}, (_, x) => availableValues[yb * 3 + y][xb * 3 + x].delete(value)))
     })
-    return result
+    return {all, availableValues}
   }, [state.givens, state.values])
   return (
     <CellsContext
@@ -74,8 +75,32 @@ export default function CellsProvider({children}: { children: ReactNode }) {
         },
         givens,
         pencilMarks: {
-          value: [],
-          set: () => undefined
+          value: state.pencilMarks,
+          set: value => {
+            let add = false
+            const setterArray: (() => void)[] = []
+            const pencilMarks = structuredClone(state.pencilMarks)
+            for (const {x, y} of coordinateArray) {
+              if (givens[y][x]) continue
+              if (value === '') {
+                if (pencilMarks[y][x].length) setterArray.push(() => {
+                  pencilMarks[y][x] = []
+                })
+              } else {
+                if (!pencilMarks[y][x].includes(value)) add = true
+                setterArray.push(() => {
+                  const array = pencilMarks[y][x]
+                  if (add) {
+                    if (!array.includes(value)) pencilMarks[y][x] = array.concat(value)
+                  } else pencilMarks[y][x] = array.filter(a => a !== value)
+                })
+              }
+            }
+            if (setterArray.length) {
+              setterArray.forEach(setter => setter())
+              setState(v => ({...v, pencilMarks}))
+            }
+          }
         },
         candidates: {
           value: state.candidates,
@@ -110,6 +135,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
           set: value => {
             let realValue = ''
             const setterArray: (() => void)[] = []
+            const pencilMarks = structuredClone(state.pencilMarks)
             const candidates = structuredClone(state.candidates)
             const values = structuredClone(state.values)
             for (const {x, y} of coordinateArray) {
@@ -121,17 +147,21 @@ export default function CellsProvider({children}: { children: ReactNode }) {
               } else {
                 if (values[y][x] !== value) realValue = value
                 setterArray.push(() => {
-                  if (realValue) candidates[y][x] = []
+                  if (realValue) {
+                    pencilMarks[y][x] = []
+                    candidates[y][x] = []
+                  }
                   values[y][x] = realValue
                 })
               }
             }
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
-              setState(v => ({...v, candidates, values}))
+              setState(v => ({...v, pencilMarks, candidates, values}))
             }
           }
         },
+        all,
         availableValues
       }}
     >{children}</CellsContext>
