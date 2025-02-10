@@ -1,5 +1,6 @@
-import classes from './Givens.module.css'
+import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Controls/Constants.ts'
 import {useCells} from './CellsProvider.tsx'
+import classes from './Givens.module.css'
 
 export default function Givens() {
   const {givens} = useCells()
@@ -9,8 +10,8 @@ export default function Givens() {
         <text
           key={`${x}${y}`}
           className={classes.given}
-          x={x * 64 + 32}
-          y={y * 64 + 35.8}
+          x={x * CELL_SIDE_LENGTH + TEXT_OFFSET.X}
+          y={y * CELL_SIDE_LENGTH + TEXT_OFFSET.Y}
         >{value}</text>
       )))}
     </g>

@@ -1,6 +1,7 @@
-import {useCells} from './CellsProvider.tsx'
+import {CELL_SIDE_LENGTH} from '../Controls/Constants.ts'
 import Coordinate from '../Coordinate.ts'
 import {arrayMap, initCellArray} from '../util.ts'
+import {useCells} from './CellsProvider.tsx'
 import classes from './Errors.module.css'
 
 export default function Errors() {
@@ -18,10 +19,10 @@ export default function Errors() {
         <rect
           key={y * 9 + x}
           className={classes.error}
-          x={x * 64}
-          y={y * 64}
-          width={64}
-          height={64}
+          x={x * CELL_SIDE_LENGTH}
+          y={y * CELL_SIDE_LENGTH}
+          width={CELL_SIDE_LENGTH}
+          height={CELL_SIDE_LENGTH}
           opacity={1}
         />
       ))}

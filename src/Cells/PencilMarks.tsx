@@ -1,6 +1,7 @@
-import {useCells} from './CellsProvider.tsx'
-import {arrayMap} from '../util.ts'
 import {Fragment} from 'react'
+import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Controls/Constants.ts'
+import {arrayMap} from '../util.ts'
+import {useCells} from './CellsProvider.tsx'
 import classes from './PencilMarks.module.css'
 
 export default function PencilMarks() {
@@ -16,8 +17,8 @@ export default function PencilMarks() {
                 <text
                   key={s}
                   className={availableValues[y][x].has(s) ? undefined : classes.conflict}
-                  x={32 + x * 64}
-                  y={35.8 + y * 64}
+                  x={x * CELL_SIDE_LENGTH + TEXT_OFFSET.X}
+                  y={y * CELL_SIDE_LENGTH + TEXT_OFFSET.Y}
                   data-key={s}
                 >{s}</text>
               )

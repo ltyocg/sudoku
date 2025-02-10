@@ -1,16 +1,16 @@
-import classes from './index.module.css'
-import Grid from './Grid.tsx'
+import {useEffect, useState} from 'react'
+import useControls from '../Controls/useControls.tsx'
 import Repeat from '../Repeat.tsx'
-import Highlights from './Highlights.tsx'
+import {ctrlKey} from '../util.ts'
+import Candidates from './Candidates.tsx'
+import Errors from './Errors.tsx'
 import Givens from './Givens.tsx'
+import Grid from './Grid.tsx'
+import Highlights from './Highlights.tsx'
+import classes from './index.module.css'
+import PencilMarks from './PencilMarks.tsx'
 import useHighlights from './useHighlights.tsx'
 import Values from './Values.tsx'
-import Errors from './Errors.tsx'
-import Candidates from './Candidates.tsx'
-import PencilMarks from './PencilMarks.tsx'
-import useControls from '../Controls/useControls.tsx'
-import {useEffect, useState} from 'react'
-import {ctrlKey} from '../util.ts'
 
 export default function Cells() {
   const {checkedSet, setCheckedSet} = useHighlights()
@@ -72,7 +72,7 @@ export default function Cells() {
         </Repeat>
       </div>
       <svg
-        className={classes.boardsvg}
+        className={classes.boardSvg}
         viewBox="-48 -64 672 704"
       >
         <g id="background"></g>

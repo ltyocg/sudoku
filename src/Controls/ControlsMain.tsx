@@ -1,8 +1,8 @@
-import classes from './index.module.css'
-import {Centre, Color, Corner, Delete, Digit} from '../icon.tsx'
 import {useEffect, useState} from 'react'
-import IconButton from './IconButton.tsx'
 import {useCells} from '../Cells/CellsProvider.tsx'
+import {Centre, Color, Corner, Delete, Digit} from '../icon.tsx'
+import IconButton from './IconButton.tsx'
+import classes from './index.module.css'
 import useControls from './useControls.tsx'
 
 export default function ControlsMain() {
@@ -172,67 +172,50 @@ function ColorKeyboard({onInput, onDelete}: {
           >
             <path
               color="var(--main-color)"
-              d="M32.00 32.00 L46.92 0.00 L64.00 0.00 L64.00 14.26 L32.00 32.00"
+              d="M32 32 L46.92 0 L64 0 L64 14.26 L32 32"
             />
             <path
               color={colorGroup[0]}
-              d="M32.00 32.00 L64.00 14.26 L64.00 35.93 L32.00 32.00"
+              d="M32 32 L64 14.26 L64 35.93 L32 32"
             />
             <path
               color={colorGroup[1]}
-              d="M32.00 32.00 L64.00 35.93 L64.00 61.84 L32.00 32.00"
+              d="M32 32 L64 35.93 L64 61.84 L32 32"
             />
             <path
               color={colorGroup[2]}
-              d="M32.00 32.00 L64.00 61.84 L64.00 64.00 L38.22 64.00 L32.00 32.00"
+              d="M32 32 L64 61.84 L64 64 L38.22 64 L32 32"
             />
             <path
               color={colorGroup[3]}
-              d="M32.00 32.00 L38.22 64.00 L17.08 64.00 L32.00 32.00"
+              d="M32 32 L38.22 64 L17.08 64 L32 32"
             />
             <path
               color={colorGroup[4]}
-              d="M32.00 32.00 L17.08 64.00 L0.00 64.00 L0.00 49.74 L32.00 32.00"
+              d="M32 32 L17.08 64 L0 64 L0 49.74 L32 32"
             />
             <path
               color={colorGroup[5]}
-              d="M32.00 32.00 L0.00 49.74 L0.00 28.07 L32.00 32.00"
+              d="M32 32 L0 49.74 L0 28.07 L32 32"
             />
             <path
               color={colorGroup[6]}
-              d="M32.00 32.00 L0.00 28.07 L0.00 2.16 L32.00 32.00"
+              d="M32 32 L0 28.07 L0 2.16 L32 32"
             />
             <path
               color={colorGroup[7]}
-              d="M32.00 32.00 L0.00 2.16 L0.00 0.00 L25.78 0.00 L32.00 32.00"
+              d="M32 32 L0 2.16 L0 0 L25.78 0 L32 32"
             />
             <path
               color={colorGroup[8]}
-              d="M32.00 32.00 L25.78 0.00 L46.92 0.00 L32.00 32.00"
+              d="M32 32 L25.78 0 L46.92 0 L32 32"
             />
           </g>
           <g
             stroke="white"
             strokeWidth={1}
           >
-            <circle
-              cx="38"
-              cy="10"
-              r="3"
-              fill={page !== 0 ? 'none' : undefined}
-            />
-            <circle
-              cx="46"
-              cy="10"
-              r="3"
-              fill={page !== 1 ? 'none' : undefined}
-            />
-            <circle
-              cx="54"
-              cy="10"
-              r="3"
-              fill={page !== 2 ? 'none' : undefined}
-            />
+            <ColorPageIndicators page={page}/>
           </g>
         </svg>
       </IconButton>
@@ -244,4 +227,16 @@ function ColorKeyboard({onInput, onDelete}: {
       </IconButton>
     </div>
   )
+}
+
+function ColorPageIndicators({page}: { page: number }) {
+  return Array.from({length: 3}, (_, i) => i).map(i => (
+    <circle
+      key={i}
+      cx={38 + i * 8}
+      cy="10"
+      r="3"
+      fill={i === page ? undefined : 'none'}
+    />
+  ))
 }

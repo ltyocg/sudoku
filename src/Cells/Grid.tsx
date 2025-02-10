@@ -1,6 +1,6 @@
+import {CELL_SIDE_LENGTH} from '../Controls/Constants.ts'
 import classes from './Grid.module.css'
 
-const edge = 64
 export default function Grid() {
   return (
     <g className={classes.grid}>
@@ -16,8 +16,8 @@ function Thin() {
     <path
       stroke="black"
       d={[
-        ...array.map(i => `M0 ${edge * i} L${edge * 9} ${edge * i}`),
-        ...array.map(i => `M${edge * i} 0 L${edge * i} ${edge * 9}`),
+        ...array.map(i => `M0 ${CELL_SIDE_LENGTH * i} L${CELL_SIDE_LENGTH * 9} ${CELL_SIDE_LENGTH * i}`),
+        ...array.map(i => `M${CELL_SIDE_LENGTH * i} 0 L${CELL_SIDE_LENGTH * i} ${CELL_SIDE_LENGTH * 9}`),
         'Z'
       ].join(' ')}
     />
@@ -33,8 +33,8 @@ function Thick() {
       stroke="rgba(0 0 0 / 1)"
       strokeWidth={strokeWidth}
       d={[
-        ...array.map(i => `M${-width} ${edge * i} L${edge * 9 + width} ${edge * i}`),
-        ...array.map(i => `M${edge * i} ${-width} L${edge * i} ${edge * 9 + width}`),
+        ...array.map(i => `M${-width} ${CELL_SIDE_LENGTH * i} L${CELL_SIDE_LENGTH * 9 + width} ${CELL_SIDE_LENGTH * i}`),
+        ...array.map(i => `M${CELL_SIDE_LENGTH * i} ${-width} L${CELL_SIDE_LENGTH * i} ${CELL_SIDE_LENGTH * 9 + width}`),
         'Z'
       ].join(' ')}
     />

@@ -1,3 +1,4 @@
+import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Controls/Constants.ts'
 import {useCells} from './CellsProvider.tsx'
 import classes from './Values.module.css'
 
@@ -9,8 +10,8 @@ export default function Values() {
         <text
           key={`${x}${y}`}
           className={classes.value}
-          x={x * 64 + 32}
-          y={y * 64 + 35.8}
+          x={x * CELL_SIDE_LENGTH + TEXT_OFFSET.X}
+          y={y * CELL_SIDE_LENGTH + TEXT_OFFSET.Y}
         >{value}</text>
       )))}
     </g>
