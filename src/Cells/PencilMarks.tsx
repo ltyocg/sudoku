@@ -1,5 +1,5 @@
 import {Fragment} from 'react'
-import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Controls/Constants.ts'
+import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Constants.ts'
 import {arrayMap} from '../util.ts'
 import {useCells} from './CellsProvider.tsx'
 import classes from './PencilMarks.module.css'

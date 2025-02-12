@@ -1,23 +1,18 @@
-.row {
+.cells {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
+  cursor: pointer;
 
-  > .cell {
-    position: relative;
-    width: 64px;
-    height: 64px;
-    font-family: Tahoma, Verdana, sans-serif;
-    opacity: 0;
+  > div {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
 
-    &:after {
-      display: block;
-      position: absolute;
-      z-index: 6;
-      width: 100%;
-      height: 100%;
-      content: "";
-      outline: 1px solid black;
-      outline-offset: -0.5px;
+    > .cell {
+      width: 64px;
+      height: 64px;
+      font-family: Tahoma, Verdana, sans-serif;
+      opacity: 0;
     }
   }
 }

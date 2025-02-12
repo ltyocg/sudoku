@@ -1,7 +1,7 @@
-import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Controls/Constants.ts'
 import {arrayMap} from '../util.ts'
 import classes from './Candidates.module.css'
 import {useCells} from './CellsProvider.tsx'
+import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Constants.ts'
 
 export default function Candidates() {
   const {candidates, availableValues} = useCells()

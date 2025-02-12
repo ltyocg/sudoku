@@ -1,4 +1,4 @@
-import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Controls/Constants.ts'
+import {CELL_SIDE_LENGTH, TEXT_OFFSET} from '../Constants.ts'
 import {useCells} from './CellsProvider.tsx'
 import classes from './Givens.module.css'
 

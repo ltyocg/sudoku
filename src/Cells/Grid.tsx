@@ -1,4 +1,4 @@
-import {CELL_SIDE_LENGTH} from '../Controls/Constants.ts'
+import {CELL_SIDE_LENGTH} from '../Constants.ts'
 import classes from './Grid.module.css'
 
 export default function Grid() {

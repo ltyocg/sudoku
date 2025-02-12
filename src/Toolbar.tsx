@@ -11,14 +11,12 @@ export default function Toolbar() {
 }
 
 function Timer() {
-  const [startTime, setStartTime] = useState(0)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [isRunning, setIsRunning] = useState(true)
   useEffect(() => {
     let interval: number | undefined
     if (isRunning) {
       const start = Date.now() - elapsedTime
-      setStartTime(start)
       interval = setInterval(() => setElapsedTime(Date.now() - start), 100)
     } else if (interval !== undefined) clearInterval(interval)
     return () => clearInterval(interval)

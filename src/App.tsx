@@ -1,4 +1,3 @@
-import classes from './App.module.css'
 import Cells from './Cells'
 import CellsProvider from './Cells/CellsProvider.tsx'
 import Toolbar from './Toolbar.tsx'
@@ -13,9 +12,7 @@ export default function App() {
       <HighlightsProvider>
         <CellsProvider>
           <Game>
-            <div className={classes.grid}>
-              <Cells/>
-            </div>
+            <Cells/>
             <Controls/>
           </Game>
         </CellsProvider>
