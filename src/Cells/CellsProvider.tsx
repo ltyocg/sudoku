@@ -9,6 +9,10 @@ interface Wrapper<T> {
 }
 
 const CellsContext = createContext<{
+  history: {
+    undo: () => void
+    redo: () => void
+  }
   colors: Wrapper<string[][][]>
   givens: string[][]
   pencilMarks: Wrapper<string[][][]>
@@ -36,21 +40,38 @@ const givens = (() => {
     [_, _, _, _, _, _, _, 2, _]
   ].map(a => a.map(i => i?.toString() ?? ''))
 })()
-export default function CellsProvider({children}: { children: ReactNode }) {
-  const coordinateArray = [...useHighlights().checkedSet].map(i => new Coordinate(i))
-  const [state, setState] = useState<{
-    colors: string[][][]
-    givens: string[][]
-    pencilMarks: string[][][]
-    candidates: string[][][]
-    values: string[][]
-  }>(() => ({
+
+interface CellsState {
+  colors: string[][][]
+  givens: string[][]
+  pencilMarks: string[][][]
+  candidates: string[][][]
+  values: string[][]
+}
+
+interface CellsTimeline {
+  array: CellsState[]
+  index: number
+}
+
+const initialCellsTimeline: CellsTimeline = {
+  array: [{
     colors: initCellArray(() => []),
     givens,
     pencilMarks: initCellArray(() => []),
     candidates: initCellArray(() => []),
     values: initCellArray(() => '')
-  }))
+  }],
+  index: 0
+}
+export default function CellsProvider({children}: { children: ReactNode }) {
+  const coordinateArray = [...useHighlights().checkedSet].map(i => new Coordinate(i))
+  const [cellsTimeline, setCellsTimeline] = useState(initialCellsTimeline)
+  const append = (state: CellsState) => setCellsTimeline(value => {
+    const array = value.array.slice(0, cellsTimeline.index + 1).concat(state)
+    return {array, index: array.length - 1}
+  })
+  const state = cellsTimeline.array[cellsTimeline.index]
   const {all, availableValues} = useMemo(() => {
     const all = state.values.map((row, y) => row.map((value, x) => value || givens[y][x]))
     const availableValues = initCellArray(() => new Set(Array.from({length: 9}, (_, i) => `${i + 1}`)))
@@ -69,6 +90,14 @@ export default function CellsProvider({children}: { children: ReactNode }) {
   return (
     <CellsContext
       value={{
+        history: {
+          undo: () => {
+            if (cellsTimeline.index > 0) setCellsTimeline(v => ({...v, index: v.index - 1}))
+          },
+          redo: () => {
+            if (cellsTimeline.array[cellsTimeline.index + 1]) setCellsTimeline(v => ({...v, index: v.index + 1}))
+          }
+        },
         colors: {
           value: [],
           set: () => undefined
@@ -98,7 +127,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             }
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
-              setState(v => ({...v, pencilMarks}))
+              append({...state, pencilMarks})
             }
           }
         },
@@ -126,7 +155,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             }
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
-              setState(v => ({...v, candidates}))
+              append({...state, candidates})
             }
           }
         },
@@ -157,7 +186,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             }
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
-              setState(v => ({...v, pencilMarks, candidates, values}))
+              append({...state, pencilMarks, candidates, values})
             }
           }
         },

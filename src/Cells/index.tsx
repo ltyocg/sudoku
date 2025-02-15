@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {type RefObject, useEffect, useState} from 'react'
 import useControls from '../Controls/useControls.tsx'
 import {arrayMap, ctrlKey} from '../util.ts'
 import Candidates from './Candidates.tsx'
@@ -11,8 +11,10 @@ import PencilMarks from './PencilMarks.tsx'
 import useHighlights from './useHighlights.tsx'
 import Values from './Values.tsx'
 import {useCells} from './CellsProvider.tsx'
+import {useApp} from '../useApp.tsx'
 
-export default function Cells() {
+export default function Cells({ref}: { ref: RefObject<HTMLDivElement | null> }) {
+  const {paused} = useApp()
   const {checkedSet, setCheckedSet} = useHighlights()
   const {all} = useCells()
   const {multiple} = useControls()
@@ -27,7 +29,11 @@ export default function Cells() {
     return () => document.removeEventListener('keydown', listener)
   })
   return (
-    <div className={classes.cells}>
+    <div
+      ref={ref}
+      className={classes.cells}
+      style={{filter: paused ? 'blur(10px)' : undefined}}
+    >
       <div>
         {Array.from({length: 81}, (_, i) => i).map(index => {
           const x = index % 9, y = Math.floor(index / 9)
@@ -82,6 +88,7 @@ export default function Cells() {
         <g id="cell-colors"></g>
         <Highlights/>
         <g id="arrows"></g>
+        <g id="cages"></g>
         <Grid/>
         <Errors/>
         <g id="overlay"></g>

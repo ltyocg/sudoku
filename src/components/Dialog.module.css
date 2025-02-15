@@ -1,0 +1,8 @@
+.dialog {
+  border: 10px solid rgb(204 204 204);
+  border-radius: 0.5rem;
+
+  &::backdrop {
+    background-color: rgba(60 60 60 / 0.7);
+  }
+}

@@ -1,13 +1,16 @@
 import classes from './index.module.css'
-import {type CSSProperties} from 'react'
-import {Info, Restart, Rules, Settings} from '../icon.tsx'
+import {type CSSProperties, type RefObject} from 'react'
+import {Info, Restart, Rules, Settings} from '../components/icon.tsx'
 import ControlsMain from './ControlsMain.tsx'
 import ControlsAuxiliary from './ControlsAuxiliary.tsx'
 import IconButton from './IconButton.tsx'
 
-export default function Controls() {
+export default function Controls({ref}: { ref: RefObject<HTMLDivElement | null> }) {
   return (
-    <div className={classes.controls}>
+    <div
+      ref={ref}
+      className={classes.controls}
+    >
       <div
         style={{
           '--button-size': '3rem'

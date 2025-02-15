@@ -1,4 +1,4 @@
-import {createContext, type ReactNode, use, useEffect, useRef, useState} from 'react'
+import {createContext, type ReactNode, type RefObject, use, useEffect, useState} from 'react'
 import classes from './App.module.css'
 import {ControlsProvider} from './Controls/useControls.tsx'
 
@@ -13,9 +13,11 @@ export function useSize() {
   return use(Context)
 }
 
-export default function Game({children}: { children: ReactNode }) {
+export default function Game({ref, children}: {
+  ref: RefObject<HTMLDivElement | null>
+  children: ReactNode
+}) {
   const [size, setSize] = useState<Size>({width: 0, height: 0})
-  const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const element = ref.current
     if (!element) return
@@ -24,21 +26,15 @@ export default function Game({children}: { children: ReactNode }) {
     resizeObserver.observe(element)
     return () => resizeObserver.disconnect()
   }, [])
-  const portraitMode = size.width < size.height
   return (
     <Context value={size}>
       <ControlsProvider>
         <div
           ref={ref}
           className={classes.game}
-          data-portrait={portraitMode}
+          data-portrait={size.width < size.height}
         >
-          <div
-            className={classes.board}
-            style={{
-              transform: `scale(1)`
-            }}
-          >{children}</div>
+          <div className={classes.board}>{children}</div>
         </div>
       </ControlsProvider>
     </Context>

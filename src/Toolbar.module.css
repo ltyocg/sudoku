@@ -13,17 +13,27 @@ button.timerControl {
   border: none;
   background-color: inherit;
   color: inherit;
-  cursor: pointer;
   border-radius: 100%;
   font-size: 0;
 
   &:hover {
     filter: brightness(1.25);
   }
+}
 
-  > svg {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
+button.resume {
+  height: 2.4rem;
+  min-width: 10rem;
+  line-height: 2.4rem;
+  font-size: 1.2rem;
+  padding: 0 0.5rem;
+  color: var(--main-color);
+  border: 1px solid rgb(204 204 204);
+  border-radius: 0.5rem;
+
+  svg {
+    vertical-align: middle;
+    position: relative;
+    top: -0.125rem;
   }
 }

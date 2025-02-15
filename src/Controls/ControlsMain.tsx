@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {useCells} from '../Cells/CellsProvider.tsx'
-import {Centre, Color, Corner, Delete, Digit} from '../icon.tsx'
+import {Centre, Color, Corner, Delete, Digit} from '../components/icon.tsx'
 import IconButton from './IconButton.tsx'
 import classes from './index.module.css'
 import useControls from './useControls.tsx'
