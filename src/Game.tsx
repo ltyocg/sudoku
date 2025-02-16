@@ -1,42 +1,87 @@
-import {createContext, type ReactNode, type RefObject, use, useEffect, useState} from 'react'
-import classes from './App.module.css'
+import {type CSSProperties, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import classes from './Game.module.css'
 import {ControlsProvider} from './Controls/useControls.tsx'
+import CellsProvider from './Cells/CellsProvider.tsx'
+import Cells from './Cells'
+import Controls from './Controls'
+import useHighlights from './Cells/useHighlights.tsx'
 
-interface Size {
-  width: number
-  height: number
-}
-
-const Context = createContext<Size>(null!)
-
-export function useSize() {
-  return use(Context)
-}
-
-export default function Game({ref, children}: {
-  ref: RefObject<HTMLDivElement | null>
-  children: ReactNode
-}) {
-  const [size, setSize] = useState<Size>({width: 0, height: 0})
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-    setSize({width: element.scrollWidth, height: element.scrollHeight})
-    const resizeObserver = new ResizeObserver(([{borderBoxSize: [{inlineSize, blockSize}]}]) => setSize({width: inlineSize, height: blockSize}))
+export default function Game() {
+  const ref = useRef<HTMLDivElement>(null)
+  const boardRef = useRef<HTMLDivElement>(null)
+  const [boardStyle, setBoardStyle] = useState<CSSProperties>({})
+  const controlsRef = useRef<HTMLDivElement>(null)
+  const [controlsStyle, setControlsStyle] = useState<CSSProperties>({})
+  const {checkedSet, setCheckedSet} = useHighlights()
+  useLayoutEffect(() => {
+    const element = ref.current, boardElement = boardRef.current, controlsElement = controlsRef.current
+    if (!(element && boardElement && controlsElement)) return
+    const resizeObserver = new ResizeObserver(([{borderBoxSize: [{inlineSize: width, blockSize: height}]}]) => {
+      const gap = 10
+      const board = {scale: 1, top: 0, left: 0}
+      const controls = {scale: 1, top: 0, left: 0, flexDirection: 'column' as 'row' | 'column'}
+      if (width >= height) {
+        controls.flexDirection = 'column'
+        controls.scale = Math.min(height / controlsElement.clientHeight, 1)
+        board.scale = Math.min(height / boardElement.clientHeight, (width - gap - controlsElement.clientWidth * controls.scale) / boardElement.clientWidth)
+        board.top = height / 2
+        controls.top = height / 2
+        board.left = (width - gap - controlsElement.clientWidth * controls.scale) / 2
+        controls.left = (width + gap + boardElement.clientWidth * board.scale) / 2
+      } else {
+        controls.flexDirection = 'row'
+        controls.scale = Math.min(width / controlsElement.clientWidth, 1)
+        board.scale = Math.min(width / boardElement.clientWidth, (height - gap - controlsElement.clientHeight * controls.scale) / boardElement.clientHeight)
+        board.top = (height - gap - controlsElement.clientHeight * controls.scale) / 2
+        controls.top = (height + gap + boardElement.clientHeight * board.scale) / 2
+        board.left = width / 2
+        controls.left = width / 2
+      }
+      setBoardStyle({
+        transform: `translate(-50%, -50%) scale(${board.scale})`,
+        top: board.top,
+        left: board.left
+      })
+      setControlsStyle({
+        transform: `translate(-50%, -50%) scale(${controls.scale})`,
+        top: controls.top,
+        left: controls.left,
+        flexDirection: controls.flexDirection
+      })
+    })
     resizeObserver.observe(element)
     return () => resizeObserver.disconnect()
   }, [])
+  useEffect(() => {
+    const gameElement = ref.current
+    if (!gameElement) return
+    const listener = (event: MouseEvent) => {
+      if (!event.composedPath().find(eventTarget => boardRef.current === eventTarget || controlsRef.current === eventTarget)
+        && checkedSet.size) setCheckedSet(new Set())
+    }
+    gameElement.addEventListener('mousedown', listener)
+    return () => gameElement.removeEventListener('mousedown', listener)
+  })
   return (
-    <Context value={size}>
+    <CellsProvider>
       <ControlsProvider>
         <div
           ref={ref}
           className={classes.game}
-          data-portrait={size.width < size.height}
         >
-          <div className={classes.board}>{children}</div>
+          <div
+            ref={boardRef}
+            className={classes.board}
+            style={boardStyle}
+          >
+            <Cells/>
+          </div>
+          <Controls
+            ref={controlsRef}
+            style={controlsStyle}
+          />
         </div>
       </ControlsProvider>
-    </Context>
+    </CellsProvider>
   )
 }

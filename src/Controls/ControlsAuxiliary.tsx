@@ -3,12 +3,16 @@ import {Check, Redo, Select, Undo} from '../components/icon.tsx'
 import IconButton from './IconButton.tsx'
 import useControls from './useControls.tsx'
 import {useCells} from '../Cells/CellsProvider.tsx'
+import {type CSSProperties} from 'react'
 
-export default function ControlsAuxiliary() {
+export default function ControlsAuxiliary({style}: { style: CSSProperties }) {
   const {history} = useCells()
   const {multiple} = useControls()
   return (
-    <div className={classes.controlsAuxiliary}>
+    <div
+      className={classes.controlsAuxiliary}
+      style={style}
+    >
       <IconButton
         className={classes.surface}
         onClick={history.undo}

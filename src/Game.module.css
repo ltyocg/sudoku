@@ -1,0 +1,11 @@
+.game {
+  position: relative;
+  flex: 1;
+  height: calc(100vh - var(--toolbar-height));
+
+  .board {
+    position: absolute;
+    width: fit-content;
+    padding: 16px;
+  }
+}

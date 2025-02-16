@@ -1,4 +1,4 @@
-import {type RefObject, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import useControls from '../Controls/useControls.tsx'
 import {arrayMap, ctrlKey} from '../util.ts'
 import Candidates from './Candidates.tsx'
@@ -13,7 +13,7 @@ import Values from './Values.tsx'
 import {useCells} from './CellsProvider.tsx'
 import {useApp} from '../useApp.tsx'
 
-export default function Cells({ref}: { ref: RefObject<HTMLDivElement | null> }) {
+export default function Cells() {
   const {paused} = useApp()
   const {checkedSet, setCheckedSet} = useHighlights()
   const {all} = useCells()
@@ -30,7 +30,6 @@ export default function Cells({ref}: { ref: RefObject<HTMLDivElement | null> }) 
   })
   return (
     <div
-      ref={ref}
       className={classes.cells}
       style={{filter: paused ? 'blur(10px)' : undefined}}
     >

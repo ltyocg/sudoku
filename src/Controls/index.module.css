@@ -1,7 +1,8 @@
 .controls {
+  position: absolute;
   display: flex;
-  flex-direction: column;
   gap: .5rem;
+  padding: 16px;
 
   > div {
     display: flex;
