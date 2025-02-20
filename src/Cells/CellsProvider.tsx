@@ -99,8 +99,31 @@ export default function CellsProvider({children}: { children: ReactNode }) {
           }
         },
         colors: {
-          value: [],
-          set: () => undefined
+          value: state.colors,
+          set: value => {
+            let add = false
+            const setterArray: (() => void)[] = []
+            const colors = structuredClone(state.colors)
+            for (const {x, y} of coordinateArray) {
+              if (value === '') {
+                if (colors[y][x].length) setterArray.push(() => {
+                  colors[y][x] = []
+                })
+              } else {
+                if (!colors[y][x].includes(value)) add = true
+                setterArray.push(() => {
+                  const array = colors[y][x]
+                  if (add) {
+                    if (!array.includes(value)) colors[y][x] = array.concat(value)
+                  } else colors[y][x] = array.filter(a => a !== value)
+                })
+              }
+            }
+            if (setterArray.length) {
+              setterArray.forEach(setter => setter())
+              append({...state, colors})
+            }
+          }
         },
         givens,
         pencilMarks: {

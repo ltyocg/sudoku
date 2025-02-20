@@ -7,7 +7,7 @@ import useControls from './useControls.tsx'
 
 export default function ControlsMain() {
   const {toolType} = useControls()
-  const {pencilMarks, candidates, values} = useCells()
+  const {colors, pencilMarks, candidates, values} = useCells()
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       if (/Digit\d/.test(event.code)) {
@@ -22,8 +22,8 @@ export default function ControlsMain() {
     <div className={classes.controlsMain}>
       {toolType.value === 'color' ? (
         <ColorKeyboard
-          onInput={console.log}
-          onDelete={console.log}
+          onInput={colors.set}
+          onDelete={() => colors.set('')}
         />
       ) : (
         <DigitKeyboard
@@ -38,7 +38,6 @@ export default function ControlsMain() {
                 break
               case 'centre':
                 candidates.set(value)
-                break
             }
           }}
           onDelete={() => {
@@ -51,7 +50,6 @@ export default function ControlsMain() {
                 break
               case 'centre':
                 candidates.set('')
-                break
             }
           }}
         />

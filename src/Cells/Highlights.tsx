@@ -1,15 +1,6 @@
 import Coordinate from '../Coordinate.ts'
 import useHighlights from './useHighlights.tsx'
-
-class Point {
-  constructor(readonly x: number,
-              readonly y: number) {
-  }
-
-  equals(other: Point) {
-    return this.x === other.x && this.y === other.y
-  }
-}
+import Point from '../Point.ts'
 
 export default function Highlights() {
   const {checkedSet} = useHighlights()
