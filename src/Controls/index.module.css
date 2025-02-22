@@ -69,6 +69,10 @@
     width: var(--button-size);
     height: var(--button-size);
 
+    &[disabled] {
+      cursor: not-allowed;
+    }
+
     .icon {
       display: inline-flex;
       vertical-align: middle;
@@ -82,7 +86,11 @@
       color: var(--main-color);
       background-color: var(--main-background-color);
 
-      &.hover {
+      &[disabled] {
+        filter: contrast(0.1) brightness(1.65);
+      }
+
+      &.hover:not([disabled]) {
         svg {
           opacity: 0.4;
         }
@@ -97,7 +105,11 @@
       background-color: var(--main-color);
       color: white;
 
-      &.hover {
+      &[disabled] {
+        filter: contrast(0.4) brightness(1.4);
+      }
+
+      &.hover:not([disabled]) {
         &:hover {
           filter: brightness(1.25);
         }
@@ -144,7 +156,7 @@
 
     &.color:after {
       content: "";
-      background-color: currentColor;
+      background-color: color-mix(in lch, white 40%, currentColor);
       margin: auto;
       display: block;
       width: calc(var(--button-size) * 0.55);

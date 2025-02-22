@@ -11,13 +11,13 @@ export default function Grid() {
 }
 
 function Thin() {
-  const array = Array.from({length: 10}).map((_, index) => index)
+  const array = Array.from({length: 8}).map((_, index) => index + 1)
   return (
     <path
       stroke="black"
       d={[
-        ...array.map(i => `M0 ${CELL_SIDE_LENGTH * i} L${CELL_SIDE_LENGTH * 9} ${CELL_SIDE_LENGTH * i}`),
-        ...array.map(i => `M${CELL_SIDE_LENGTH * i} 0 L${CELL_SIDE_LENGTH * i} ${CELL_SIDE_LENGTH * 9}`),
+        ...array.map(i => `M0 ${CELL_SIDE_LENGTH * i} H${CELL_SIDE_LENGTH * 9}`),
+        ...array.map(i => `M${CELL_SIDE_LENGTH * i} 0 V${CELL_SIDE_LENGTH * 9}`),
         'Z'
       ].join(' ')}
     />
@@ -25,17 +25,15 @@ function Thin() {
 }
 
 function Thick() {
-  const strokeWidth = 3
-  const width = strokeWidth / 2
-  const array = Array.from({length: 4}).map((_, index) => index * 3)
+  const array = Array.from({length: 2}).map((_, index) => (index + 1) * 3)
   return (
     <path
       stroke="rgba(0 0 0 / 1)"
-      strokeWidth={strokeWidth}
+      strokeWidth={3}
       d={[
-        ...array.map(i => `M${-width} ${CELL_SIDE_LENGTH * i} L${CELL_SIDE_LENGTH * 9 + width} ${CELL_SIDE_LENGTH * i}`),
-        ...array.map(i => `M${CELL_SIDE_LENGTH * i} ${-width} L${CELL_SIDE_LENGTH * i} ${CELL_SIDE_LENGTH * 9 + width}`),
-        'Z'
+        ...array.map(i => `M0 ${CELL_SIDE_LENGTH * i} H${CELL_SIDE_LENGTH * 9}`),
+        ...array.map(i => `M${CELL_SIDE_LENGTH * i} 0 V${CELL_SIDE_LENGTH * 9}`),
+        `M0 0 L${CELL_SIDE_LENGTH * 9} 0 L${CELL_SIDE_LENGTH * 9} ${CELL_SIDE_LENGTH * 9} L0 ${CELL_SIDE_LENGTH * 9} Z`
       ].join(' ')}
     />
   )

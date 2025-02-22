@@ -1,15 +1,6 @@
 import Coordinate from '../Coordinate.ts'
 import useHighlights from './useHighlights.tsx'
-
-class Point {
-  constructor(readonly x: number,
-              readonly y: number) {
-  }
-
-  equals(other: Point) {
-    return this.x === other.x && this.y === other.y
-  }
-}
+import Point from '../Point.ts'
 
 export default function Highlights() {
   const {checkedSet} = useHighlights()
@@ -38,10 +29,10 @@ export default function Highlights() {
           strokeLinejoin="round"
           shapeRendering="geometricPrecision"
           d={combine(pathSegmentArray).map((ps) => {
-            const pr: (string | number)[] = ['M', ps[0].x, ps[0].y]
-            for (let i = 1; i < ps.length; i++) {
+            const pr: (string | number)[] = ['M' + ps[0].x, ps[0].y]
+            for (let i = 1; i < ps.length - 1; i++) {
               const {x, y} = ps[i]
-              pr.push('L', x, y)
+              pr.push('L' + x, y)
             }
             pr.push('Z')
             return pr

@@ -7,13 +7,37 @@ import useControls from './useControls.tsx'
 
 export default function ControlsMain() {
   const {toolType} = useControls()
-  const {pencilMarks, candidates, values} = useCells()
+  const {colors, pencilMarks, candidates, values} = useCells()
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       if (/Digit\d/.test(event.code)) {
         event.preventDefault()
-        values.set(event.key)
-      } else if (event.code === 'Backspace') values.set('')
+        switch (toolType.value) {
+          case 'normal':
+            values.set(event.key)
+            break
+          case 'corner':
+            pencilMarks.set(event.key)
+            break
+          case 'centre':
+            candidates.set(event.key)
+        }
+      } else if (event.code === 'Backspace') {
+        event.preventDefault()
+        switch (toolType.value) {
+          case 'normal':
+            values.set('')
+            break
+          case 'corner':
+            pencilMarks.set('')
+            break
+          case 'centre':
+            candidates.set('')
+            break
+          case 'color':
+            colors.set('')
+        }
+      }
     }
     document.addEventListener('keydown', listener)
     return () => document.removeEventListener('keydown', listener)
@@ -22,8 +46,8 @@ export default function ControlsMain() {
     <div className={classes.controlsMain}>
       {toolType.value === 'color' ? (
         <ColorKeyboard
-          onInput={console.log}
-          onDelete={console.log}
+          onInput={colors.set}
+          onDelete={() => colors.set('')}
         />
       ) : (
         <DigitKeyboard
@@ -38,7 +62,6 @@ export default function ControlsMain() {
                 break
               case 'centre':
                 candidates.set(value)
-                break
             }
           }}
           onDelete={() => {
@@ -51,7 +74,6 @@ export default function ControlsMain() {
                 break
               case 'centre':
                 candidates.set('')
-                break
             }
           }}
         />
@@ -88,6 +110,7 @@ function DigitKeyboard({toolType, onInput, onDelete}: {
         <button
           key={v}
           className={[classes.solid, classes.hover, classes.digit].join(' ')}
+          disabled={v === '0'}
           data-key={v}
           onClick={() => onInput(v)}
         >{v}</button>
@@ -166,7 +189,7 @@ function ColorKeyboard({onInput, onDelete}: {
           height="48"
         >
           <g
-            stroke="#0003"
+            stroke="rgba(0 0 0 / 0.2)"
             strokeWidth={0.3}
             clipPath="inset(0.5rem 0.5rem 0.5rem 0.5rem round 0rem)"
           >

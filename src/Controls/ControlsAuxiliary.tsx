@@ -15,12 +15,14 @@ export default function ControlsAuxiliary({style}: { style: CSSProperties }) {
     >
       <IconButton
         className={classes.surface}
+        disabled={!history.canUndo}
         onClick={history.undo}
       >
         <Undo/>
       </IconButton>
       <IconButton
         className={classes.surface}
+        disabled={!history.canRedo}
         onClick={history.redo}
       >
         <Redo/>

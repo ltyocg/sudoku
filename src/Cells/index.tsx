@@ -12,6 +12,7 @@ import useHighlights from './useHighlights.tsx'
 import Values from './Values.tsx'
 import {useCells} from './CellsProvider.tsx'
 import {useApp} from '../useApp.tsx'
+import Colors from './Colors.tsx'
 
 export default function Cells() {
   const {paused} = useApp()
@@ -84,7 +85,7 @@ export default function Cells() {
       >
         <g id="background"></g>
         <g id="underlay"></g>
-        <g id="cell-colors"></g>
+        <Colors/>
         <Highlights/>
         <g id="arrows"></g>
         <g id="cages"></g>

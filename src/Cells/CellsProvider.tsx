@@ -10,7 +10,9 @@ interface Wrapper<T> {
 
 const CellsContext = createContext<{
   history: {
+    canUndo: boolean
     undo: () => void
+    canRedo: boolean
     redo: () => void
   }
   colors: Wrapper<string[][][]>
@@ -87,20 +89,67 @@ export default function CellsProvider({children}: { children: ReactNode }) {
     })
     return {all, availableValues}
   }, [state.givens, state.values])
+  const canUndo = cellsTimeline.index > 0
+  const canRedo = !!cellsTimeline.array[cellsTimeline.index + 1]
   return (
     <CellsContext
       value={{
         history: {
+          canUndo,
           undo: () => {
-            if (cellsTimeline.index > 0) setCellsTimeline(v => ({...v, index: v.index - 1}))
+            if (canUndo) setCellsTimeline(v => ({...v, index: v.index - 1}))
           },
+          canRedo,
           redo: () => {
-            if (cellsTimeline.array[cellsTimeline.index + 1]) setCellsTimeline(v => ({...v, index: v.index + 1}))
+            if (canRedo) setCellsTimeline(v => ({...v, index: v.index + 1}))
           }
         },
         colors: {
-          value: [],
-          set: () => undefined
+          value: state.colors,
+          set: value => {
+            let add = false
+            const setterArray: (() => void)[] = []
+            const colors = structuredClone(state.colors)
+            for (const {x, y} of coordinateArray) {
+              if (value === '') {
+                if (colors[y][x].length) setterArray.push(() => {
+                  colors[y][x] = []
+                })
+              } else {
+                if (!colors[y][x].includes(value)) add = true
+                setterArray.push(() => {
+                  const array = colors[y][x]
+                  if (add) {
+                    if (!array.includes(value)) colors[y][x] = array.concat(value)
+                  } else colors[y][x] = array.filter(a => a !== value)
+                })
+              }
+            }
+            if (setterArray.length) {
+              setterArray.forEach(setter => setter())
+              append({...state, colors})
+            } else if (value === '') {
+              let edit = false
+              const pencilMarks = structuredClone(state.pencilMarks)
+              const candidates = structuredClone(state.candidates)
+              const values = structuredClone(state.values)
+              for (const {x, y} of coordinateArray) {
+                if (pencilMarks[y][x].length) {
+                  pencilMarks[y][x] = []
+                  edit = true
+                }
+                if (candidates[y][x].length) {
+                  candidates[y][x] = []
+                  edit = true
+                }
+                if (values[y][x]) {
+                  values[y][x] = ''
+                  edit = true
+                }
+              }
+              if (edit) append({...state, pencilMarks, candidates, values})
+            }
+          }
         },
         givens,
         pencilMarks: {
@@ -128,6 +177,26 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
               append({...state, pencilMarks})
+            } else if (value === '') {
+              let edit = false
+              const colors = structuredClone(state.colors)
+              const candidates = structuredClone(state.candidates)
+              const values = structuredClone(state.values)
+              for (const {x, y} of coordinateArray) {
+                if (colors[y][x].length) {
+                  colors[y][x] = []
+                  edit = true
+                }
+                if (candidates[y][x].length) {
+                  candidates[y][x] = []
+                  edit = true
+                }
+                if (values[y][x]) {
+                  values[y][x] = ''
+                  edit = true
+                }
+              }
+              if (edit) append({...state, colors, candidates, values})
             }
           }
         },
@@ -156,6 +225,26 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
               append({...state, candidates})
+            } else if (value === '') {
+              let edit = false
+              const colors = structuredClone(state.colors)
+              const pencilMarks = structuredClone(state.pencilMarks)
+              const values = structuredClone(state.values)
+              for (const {x, y} of coordinateArray) {
+                if (colors[y][x].length) {
+                  colors[y][x] = []
+                  edit = true
+                }
+                if (pencilMarks[y][x].length) {
+                  pencilMarks[y][x] = []
+                  edit = true
+                }
+                if (values[y][x]) {
+                  values[y][x] = ''
+                  edit = true
+                }
+              }
+              if (edit) append({...state, colors, pencilMarks, values})
             }
           }
         },
@@ -187,6 +276,26 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             if (setterArray.length) {
               setterArray.forEach(setter => setter())
               append({...state, pencilMarks, candidates, values})
+            } else if (value === '') {
+              let edit = false
+              const colors = structuredClone(state.colors)
+              const pencilMarks = structuredClone(state.pencilMarks)
+              const candidates = structuredClone(state.candidates)
+              for (const {x, y} of coordinateArray) {
+                if (colors[y][x].length) {
+                  colors[y][x] = []
+                  edit = true
+                }
+                if (pencilMarks[y][x].length) {
+                  pencilMarks[y][x] = []
+                  edit = true
+                }
+                if (candidates[y][x].length) {
+                  candidates[y][x] = []
+                  edit = true
+                }
+              }
+              if (edit) append({...state, colors, pencilMarks, values})
             }
           }
         },

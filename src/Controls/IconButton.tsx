@@ -1,8 +1,9 @@
 import type {ReactNode} from 'react'
 import classes from './index.module.css'
 
-export default function IconButton({className, onClick, children}: {
+export default function IconButton({className, disabled, onClick, children}: {
   className?: string
+  disabled?: boolean
   onClick?: () => void
   children: ReactNode
 }) {
@@ -10,6 +11,7 @@ export default function IconButton({className, onClick, children}: {
     <button
       className={className}
       style={{fontSize: 0}}
+      disabled={disabled}
       onClick={onClick}
     >
       <div className={classes.icon}>{children}</div>
