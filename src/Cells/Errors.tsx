@@ -1,11 +1,9 @@
 import {CELL_SIDE_LENGTH} from '../Constants.ts'
 import Coordinate from '../Coordinate.ts'
 import {arrayMap, initCellArray} from '../util.ts'
-import {useCells} from './CellsProvider.tsx'
 import classes from './Errors.module.css'
 
-export default function Errors() {
-  const {all} = useCells()
+export default function Errors({all}: { all: string[][] }) {
   const errorArray = initCellArray(() => false)
   checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(i, index)))
   checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(index, i)))
@@ -17,7 +15,7 @@ export default function Errors() {
     <g>
       {arrayMap(errorArray, (value, x, y) => value && (
         <rect
-          key={y * 9 + x}
+          key={x + '-' + y}
           className={classes.error}
           x={x * CELL_SIDE_LENGTH}
           y={y * CELL_SIDE_LENGTH}

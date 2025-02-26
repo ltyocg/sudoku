@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {useCells} from '../Cells/CellsProvider.tsx'
-import {Centre, Color, Corner, Delete, Digit} from '../components/icon.tsx'
+import {Centre, Color, Corner, Delete, Digit, Pen} from '../components/icon.tsx'
 import IconButton from './IconButton.tsx'
 import classes from './index.module.css'
 import useControls from './useControls.tsx'
@@ -9,8 +9,9 @@ export default function ControlsMain() {
   const {toolType} = useControls()
   const {colors, pencilMarks, candidates, values} = useCells()
   useEffect(() => {
-    const listener = (event: KeyboardEvent) => {
-      if (/Digit\d/.test(event.code)) {
+    const abortController = new AbortController()
+    document.addEventListener('keydown', event => {
+      if (/Digit[1-9]/.test(event.code)) {
         event.preventDefault()
         switch (toolType.value) {
           case 'normal':
@@ -38,9 +39,8 @@ export default function ControlsMain() {
             colors.set('')
         }
       }
-    }
-    document.addEventListener('keydown', listener)
-    return () => document.removeEventListener('keydown', listener)
+    }, {signal: abortController.signal})
+    return () => abortController.abort()
   })
   return (
     <div className={classes.controlsMain}>
@@ -83,7 +83,8 @@ export default function ControlsMain() {
           {value: 'normal', icon: <Digit/>},
           {value: 'corner', icon: <Corner/>},
           {value: 'centre', icon: <Centre/>},
-          {value: 'color', icon: <Color/>}
+          {value: 'color', icon: <Color/>},
+          {value: 'pen', icon: <Pen/>}
         ].map(o => (
           <IconButton
             key={o.value}

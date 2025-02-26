@@ -14,6 +14,7 @@ const CellsContext = createContext<{
     undo: () => void
     canRedo: boolean
     redo: () => void
+    reset: () => void
   }
   colors: Wrapper<string[][][]>
   givens: string[][]
@@ -102,7 +103,8 @@ export default function CellsProvider({children}: { children: ReactNode }) {
           canRedo,
           redo: () => {
             if (canRedo) setCellsTimeline(v => ({...v, index: v.index + 1}))
-          }
+          },
+          reset: () => setCellsTimeline(initialCellsTimeline)
         },
         colors: {
           value: state.colors,

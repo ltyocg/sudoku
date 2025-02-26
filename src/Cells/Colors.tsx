@@ -1,15 +1,13 @@
-import {useCells} from './CellsProvider.tsx'
 import {arrayMap} from '../util.ts'
 import {CELL_SIDE_LENGTH} from '../Constants.ts'
 import Point from '../Point.ts'
 
-export default function Colors() {
-  const {colors} = useCells()
+export default function Colors({array}: { array: string[][][] }) {
   return (
     <g style={{opacity: 0.6}}>
-      {arrayMap(colors.value, (value, x, y) => (
+      {arrayMap(array, (value, x, y) => (
         <Path
-          key={y * 9 + x}
+          key={x + '-' + y}
           value={value}
           x={x}
           y={y}
@@ -78,8 +76,7 @@ function Path({value, x, y}: {
 function calculateIntersection(theta: number) {
   const halfS = CELL_SIDE_LENGTH / 2
   const candidates = []
-  const cosValue = Math.cos(theta)
-  const sinValue = Math.sin(theta)
+  const cosValue = Math.cos(theta), sinValue = Math.sin(theta)
   if (cosValue > 0) {
     const t = halfS / cosValue
     const y = t * sinValue

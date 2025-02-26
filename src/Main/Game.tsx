@@ -1,14 +1,15 @@
 import {type CSSProperties, useEffect, useLayoutEffect, useRef, useState} from 'react'
 import classes from './Game.module.css'
-import {ControlsProvider} from './Controls/useControls.tsx'
-import CellsProvider from './Cells/CellsProvider.tsx'
-import Cells from './Cells'
-import Controls from './Controls'
-import useHighlights from './Cells/useHighlights.tsx'
+import {ControlsProvider} from '../Controls/useControls.tsx'
+import CellsProvider from '../Cells/CellsProvider.tsx'
+import Cells from '../Cells'
+import Controls from '../Controls'
+import useHighlights from '../Cells/useHighlights.tsx'
 
 export default function Game() {
   const ref = useRef<HTMLDivElement>(null)
   const boardRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
   const [boardStyle, setBoardStyle] = useState<CSSProperties>({})
   const controlsRef = useRef<HTMLDivElement>(null)
   const [controlsStyle, setControlsStyle] = useState<CSSProperties>({})
@@ -16,7 +17,7 @@ export default function Game() {
   useLayoutEffect(() => {
     const element = ref.current, boardElement = boardRef.current, controlsElement = controlsRef.current
     if (!(element && boardElement && controlsElement)) return
-    const resizeObserver = new ResizeObserver(([{borderBoxSize: [{inlineSize: width, blockSize: height}]}]) => {
+    const listener = (width: number, height: number) => {
       const gap = 10
       const board = {scale: 1, top: 0, left: 0}
       const controls = {scale: 1, top: 0, left: 0, flexDirection: 'column' as 'row' | 'column'}
@@ -48,19 +49,21 @@ export default function Game() {
         left: controls.left,
         flexDirection: controls.flexDirection
       })
-    })
+    }
+    listener(element.clientWidth, element.clientHeight)
+    const resizeObserver = new ResizeObserver(([{borderBoxSize: [{inlineSize, blockSize}]}]) => listener(inlineSize, blockSize))
     resizeObserver.observe(element)
     return () => resizeObserver.disconnect()
   }, [])
   useEffect(() => {
     const gameElement = ref.current
     if (!gameElement) return
-    const listener = (event: MouseEvent) => {
-      if (!event.composedPath().find(eventTarget => boardRef.current === eventTarget || controlsRef.current === eventTarget)
+    const abortController = new AbortController()
+    gameElement.addEventListener('mousedown', (event: MouseEvent) => {
+      if (!event.composedPath().find(eventTarget => gridRef.current === eventTarget || controlsRef.current === eventTarget)
         && checkedSet.size) setCheckedSet(new Set())
-    }
-    gameElement.addEventListener('mousedown', listener)
-    return () => gameElement.removeEventListener('mousedown', listener)
+    }, {signal: abortController.signal})
+    return () => abortController.abort()
   })
   return (
     <CellsProvider>
@@ -74,7 +77,7 @@ export default function Game() {
             className={classes.board}
             style={boardStyle}
           >
-            <Cells/>
+            <Cells gridRef={gridRef}/>
           </div>
           <Controls
             ref={controlsRef}

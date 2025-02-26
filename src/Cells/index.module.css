@@ -24,7 +24,6 @@
   height: 704px;
   margin: -64px 0 0 -48px;
   position: absolute;
-  pointer-events: none;
 
   text {
     text-anchor: middle;

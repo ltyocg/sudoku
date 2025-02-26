@@ -1,9 +1,8 @@
 import classes from './Toolbar.module.css'
 import {useEffect, useState} from 'react'
-import {useApp} from './useApp.tsx'
-import {createPortal} from 'react-dom'
-import Dialog from './components/Dialog.tsx'
-import {Paused, Resume} from './components/icon.tsx'
+import {useMain} from './useMain.tsx'
+import Dialog from '../components/Dialog.tsx'
+import {Paused, Resume} from '../components/icon.tsx'
 
 export default function Toolbar() {
   return (
@@ -16,7 +15,7 @@ export default function Toolbar() {
 
 function Timer() {
   const [elapsedTime, setElapsedTime] = useState(0)
-  const {paused, setPaused} = useApp()
+  const {paused, setPaused} = useMain()
   useEffect(() => {
     let interval: number | undefined
     if (!paused) {
@@ -24,7 +23,12 @@ function Timer() {
       interval = setInterval(() => setElapsedTime(Date.now() - start), 100)
     } else if (interval !== undefined) clearInterval(interval)
     return () => clearInterval(interval)
-  }, [paused])
+  }, [elapsedTime, paused])
+  useEffect(() => {
+    const abortController = new AbortController()
+    addEventListener('app.reset-time', () => setElapsedTime(0), {signal: abortController.signal})
+    return () => abortController.abort()
+  }, [])
   const totalSeconds = Math.floor(elapsedTime / 1000)
   return (
     <>
@@ -42,24 +46,21 @@ function Timer() {
       >
         {paused ? <Resume/> : <Paused/>}
       </button>
-      {createPortal(
-        <Dialog
-          open={paused}
-          onOpenChange={setPaused}
-        >
-          <h1 style={{textAlign: 'center'}}>游戏暂停</h1>
-          <div>
-            <button
-              className={classes.resume}
-              onClick={() => setPaused(false)}
-            >
-              继续
-              <Resume/>
-            </button>
-          </div>
-        </Dialog>,
-        document.body
-      )}
+      <Dialog
+        open={paused}
+        onOpenChange={setPaused}
+      >
+        <h1 style={{textAlign: 'center'}}>游戏暂停</h1>
+        <div>
+          <button
+            className={classes.resume}
+            onClick={() => setPaused(false)}
+          >
+            继续
+            <Resume/>
+          </button>
+        </div>
+      </Dialog>
     </>
   )
 }

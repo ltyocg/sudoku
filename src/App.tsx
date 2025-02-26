@@ -1,15 +1,15 @@
-import Toolbar from './Toolbar.tsx'
-import Game from './Game.tsx'
-import {HighlightsProvider} from './Cells/useHighlights.tsx'
-import {AppProvider} from './useApp.tsx'
+import Main from './Main'
+import useAppState from './useAppState.tsx'
+import Start from './Start'
+import {type ReactNode} from 'react'
+import SelectLevel from './Start/SelectLevel.tsx'
 
+const routes: Record<string, ReactNode> = {
+  '/start': <Start/>,
+  '/start/selectLevel': <SelectLevel/>,
+  '/main': <Main/>
+}
 export default function App() {
-  return (
-    <AppProvider>
-      <Toolbar/>
-      <HighlightsProvider>
-        <Game/>
-      </HighlightsProvider>
-    </AppProvider>
-  )
+  const {state} = useAppState()
+  return routes[state.route]
 }

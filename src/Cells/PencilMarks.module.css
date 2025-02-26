@@ -6,22 +6,23 @@
       fill: rgba(179 58 58 / 1);
     }
 
-    --offset: 16px;
+    --x-offset: 17px;
+    --y-offset: 16px;
 
     &:where([data-key="1"],[data-key="4"],[data-key="7"],[data-key="A"],[data-key="D"],[data-key="G"]) {
-      --x: calc(0px - var(--offset));
+      --x: calc(0px - var(--x-offset));
     }
 
     &:where([data-key="3"],[data-key="6"],[data-key="9"],[data-key="C"],[data-key="F"],[data-key="I"]) {
-      --x: var(--offset);
+      --x: var(--x-offset);
     }
 
     &:where([data-key="1"],[data-key="2"],[data-key="3"],[data-key="A"],[data-key="B"],[data-key="C"]) {
-      --y: calc(0px - var(--offset));
+      --y: calc(0px - var(--y-offset));
     }
 
     &:where([data-key="7"],[data-key="8"],[data-key="9"],[data-key="G"],[data-key="H"],[data-key="I"]) {
-      --y: var(--offset);
+      --y: var(--y-offset);
     }
 
     &[data-key] {

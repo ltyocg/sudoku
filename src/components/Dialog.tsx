@@ -1,5 +1,6 @@
 import {type ReactNode, useEffect, useRef} from 'react'
 import classes from './Dialog.module.css'
+import {createPortal} from 'react-dom'
 
 export default function Dialog({open, onOpenChange, children}: {
   open?: boolean
@@ -14,14 +15,19 @@ export default function Dialog({open, onOpenChange, children}: {
       el.showModal()
       onOpenChange?.(true)
     } else el.close()
-    const listener = () => onOpenChange?.(false)
-    el.addEventListener('close', listener)
-    return () => el.removeEventListener('close', listener)
+    const abortController = new AbortController()
+    el.addEventListener('close', () => onOpenChange?.(false), {signal: abortController.signal})
+    return () => abortController.abort()
   }, [open])
   return (
-    <dialog
-      ref={ref}
-      className={classes.dialog}
-    >{children}</dialog>
+    <>
+      {createPortal(
+        <dialog
+          ref={ref}
+          className={classes.dialog}
+        >{children}</dialog>,
+        document.body
+      )}
+    </>
   )
 }

@@ -1,7 +1,10 @@
-import type {CSSProperties} from 'react'
+import {type CSSProperties, useState} from 'react'
 import IconButton from './IconButton.tsx'
 import classes from './index.module.css'
-import {Info, Restart, Rules, Settings} from '../components/icon.tsx'
+import {Info, Restart, Rules} from '../components/icon.tsx'
+import {useCells} from '../Cells/CellsProvider.tsx'
+import Dialog from '../components/Dialog.tsx'
+import {MdSettings} from 'react-icons/md'
 
 export default function ControlsApp({style}: { style: CSSProperties }) {
   return (
@@ -12,7 +15,7 @@ export default function ControlsApp({style}: { style: CSSProperties }) {
       } as CSSProperties}
     >
       <IconButton className={[classes.surface, classes.hover].join(' ')}>
-        <Settings/>
+        <MdSettings size={24}/>
       </IconButton>
       <IconButton className={[classes.surface, classes.hover].join(' ')}>
         <Rules/>
@@ -20,9 +23,32 @@ export default function ControlsApp({style}: { style: CSSProperties }) {
       <IconButton className={[classes.surface, classes.hover].join(' ')}>
         <Info/>
       </IconButton>
-      <IconButton className={[classes.surface, classes.hover].join(' ')}>
+      <RestartButton/>
+    </div>
+  )
+}
+
+function RestartButton() {
+  const {history} = useCells()
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <IconButton
+        className={[classes.surface, classes.hover].join(' ')}
+        title="重置"
+        onClick={() => {
+          history.reset()
+          dispatchEvent(new CustomEvent('app.reset-time'))
+        }}
+      >
         <Restart/>
       </IconButton>
-    </div>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+      >
+        <h1 style={{textAlign: 'center'}}>重新开始</h1>
+      </Dialog>
+    </>
   )
 }

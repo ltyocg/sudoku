@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {Ref, useEffect, useState} from 'react'
 import useControls from '../Controls/useControls.tsx'
 import {arrayMap, ctrlKey} from '../util.ts'
 import Candidates from './Candidates.tsx'
@@ -11,30 +11,35 @@ import PencilMarks from './PencilMarks.tsx'
 import useHighlights from './useHighlights.tsx'
 import Values from './Values.tsx'
 import {useCells} from './CellsProvider.tsx'
-import {useApp} from '../useApp.tsx'
+import {useMain} from '../Main/useMain.tsx'
 import Colors from './Colors.tsx'
+import LabelsRowCol from './LabelsRowCol.tsx'
+import Cages from './Cages.tsx'
 
-export default function Cells() {
-  const {paused} = useApp()
+export default function Cells({gridRef}: { gridRef?: Ref<HTMLDivElement> }) {
+  const {paused} = useMain()
   const {checkedSet, setCheckedSet} = useHighlights()
-  const {all} = useCells()
+  const {colors, givens, pencilMarks, candidates, values, all, availableValues} = useCells()
   const {multiple} = useControls()
-  const [flag, setFlag] = useState(true)
+  const [selectFlag, setSelectFlag] = useState(true)
   useEffect(() => {
-    const listener = (event: KeyboardEvent) => {
+    const abortController = new AbortController()
+    document.addEventListener('keydown', event => {
       if (!(ctrlKey(event) && event.code === 'KeyA')) return
       event.preventDefault()
       setCheckedSet(new Set(Array.from({length: 81}, (_, i) => i)))
-    }
-    document.addEventListener('keydown', listener)
-    return () => document.removeEventListener('keydown', listener)
+    }, {signal: abortController.signal})
+    return () => abortController.abort()
   })
   return (
     <div
       className={classes.cells}
-      style={{filter: paused ? 'blur(10px)' : undefined}}
+      style={{
+        margin: '64px 48px',
+        filter: paused ? 'blur(10px)' : undefined
+      }}
     >
-      <div>
+      <div ref={gridRef}>
         {Array.from({length: 81}, (_, i) => i).map(index => {
           const x = index % 9, y = Math.floor(index / 9)
           return (
@@ -44,22 +49,25 @@ export default function Cells() {
               onMouseDown={event => {
                 if (multiple.value || ctrlKey(event)) {
                   if (checkedSet.has(index)) {
-                    setFlag(false)
+                    setSelectFlag(false)
                     setCheckedSet(v => {
                       const set = new Set(v)
                       set.delete(index)
                       return set
                     })
                   } else {
-                    setFlag(true)
+                    setSelectFlag(true)
                     setCheckedSet(v => new Set(v).add(index))
                   }
                 } else setCheckedSet(new Set([index]))
               }}
               onMouseMove={event => {
-                if (event.buttons !== 1) return
-                if ((event.nativeEvent.offsetX - 32) ** 2 + (event.nativeEvent.offsetY - 32) ** 2 > 29 ** 2) return
-                if (flag) setCheckedSet(v => new Set(v).add(index))
+                if (event.buttons !== 1) {
+                  if (!selectFlag) setSelectFlag(true)
+                  return
+                }
+                if ((event.nativeEvent.offsetX - 32) ** 2 + (event.nativeEvent.offsetY - 32) ** 2 > 30 ** 2) return
+                if (selectFlag) setCheckedSet(v => new Set(v).add(index))
                 else setCheckedSet(v => {
                   const set = new Set(v)
                   set.delete(index)
@@ -81,22 +89,26 @@ export default function Cells() {
       </div>
       <svg
         className={classes.boardSvg}
+        style={{pointerEvents: 'none'}}
         viewBox="-48 -64 672 704"
       >
-        <g id="background"></g>
-        <g id="underlay"></g>
-        <Colors/>
+        <Colors array={colors.value}/>
         <Highlights/>
-        <g id="arrows"></g>
-        <g id="cages"></g>
+        <Cages/>
         <Grid/>
-        <Errors/>
-        <g id="overlay"></g>
-        <Givens/>
+        <Errors all={all}/>
+        <LabelsRowCol/>
+        <Givens array={givens}/>
         <g id="cell-pen"></g>
-        <PencilMarks/>
-        <Candidates/>
-        <Values/>
+        <PencilMarks
+          pencilMarks={pencilMarks.value}
+          availableValues={availableValues}
+        />
+        <Candidates
+          candidates={candidates.value}
+          availableValues={availableValues}
+        />
+        <Values array={values.value}/>
       </svg>
     </div>
   )

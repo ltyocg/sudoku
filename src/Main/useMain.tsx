@@ -5,11 +5,11 @@ const Context = createContext<{
   setPaused: Dispatch<SetStateAction<boolean>>
 }>(null!)
 
-export function useApp() {
+export function useMain() {
   return use(Context)
 }
 
-export function AppProvider({children}: { children: ReactNode }) {
+export function MainProvider({children}: { children: ReactNode }) {
   const [paused, setPaused] = useState(false)
   return <Context value={{paused, setPaused}}>{children}</Context>
 }

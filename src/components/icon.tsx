@@ -233,6 +233,38 @@ export function Color() {
   )
 }
 
+export function Pen() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="48"
+      height="48"
+    >
+      <path d="M18 19H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm1-16H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+      <path
+        d="M12 12 L20 12"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="2"
+      />
+      <path
+        d="M12 12 L12 20"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="2"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="5"
+        strokeWidth="1"
+        stroke="currentColor"
+        fill="none"
+      />
+    </svg>
+  )
+}
+
 export function Undo() {
   return (
     <svg
