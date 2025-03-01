@@ -3,7 +3,7 @@
 
   > text {
     &.conflict {
-      fill: rgba(179 58 58 / 1);
+      fill: var(--conflict-value-color);
     }
 
     --x-offset: 17px;

@@ -1,21 +1,20 @@
-import Coordinate from '../Coordinate.ts'
 import useHighlights from './useHighlights.tsx'
 import Point from '../Point.ts'
+import coordinateFactory from '../base/coordinateFactory.ts'
 
 export default function Highlights() {
   const {checkedSet} = useHighlights()
   const pathSegmentArray: Point[][] = []
-  for (let i of checkedSet) {
-    const {x, y} = new Coordinate(i)
+  for (const {x, y} of checkedSet) {
     let b = 0
-    if (x !== 0 && y !== 0 && checkedSet.has(i - 10)) b |= 0x01
-    if (y !== 0 && checkedSet.has(i - 9)) b |= 0x02
-    if (x !== 8 && y !== 0 && checkedSet.has(i - 8)) b |= 0x04
-    if (x !== 8 && checkedSet.has(i + 1)) b |= 0x08
-    if (x !== 8 && y !== 8 && checkedSet.has(i + 10)) b |= 0x10
-    if (y !== 8 && checkedSet.has(i + 9)) b |= 0x20
-    if (x !== 0 && y !== 8 && checkedSet.has(i + 8)) b |= 0x40
-    if (x !== 0 && checkedSet.has(i - 1)) b |= 0x80
+    if (x !== 0 && y !== 0 && checkedSet.has(coordinateFactory.get(x - 1, y - 1))) b |= 0x01
+    if (y !== 0 && checkedSet.has(coordinateFactory.get(x, y - 1))) b |= 0x02
+    if (x !== 8 && y !== 0 && checkedSet.has(coordinateFactory.get(x + 1, y - 1))) b |= 0x04
+    if (x !== 8 && checkedSet.has(coordinateFactory.get(x + 1, y))) b |= 0x08
+    if (x !== 8 && y !== 8 && checkedSet.has(coordinateFactory.get(x + 1, y + 1))) b |= 0x10
+    if (y !== 8 && checkedSet.has(coordinateFactory.get(x, y + 1))) b |= 0x20
+    if (x !== 0 && y !== 8 && checkedSet.has(coordinateFactory.get(x - 1, y + 1))) b |= 0x40
+    if (x !== 0 && checkedSet.has(coordinateFactory.get(x - 1, y))) b |= 0x80
     pathSegmentArray.push(...pathSegment(x, y, b))
   }
   return (

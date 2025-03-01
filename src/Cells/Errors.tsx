@@ -1,15 +1,15 @@
 import {CELL_SIDE_LENGTH} from '../Constants.ts'
-import Coordinate from '../Coordinate.ts'
 import {arrayMap, initCellArray} from '../util.ts'
 import classes from './Errors.module.css'
+import coordinateFactory, {type Coordinate} from '../base/coordinateFactory.ts'
 
 export default function Errors({all}: { all: string[][] }) {
   const errorArray = initCellArray(() => false)
-  checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(i, index)))
-  checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => new Coordinate(index, i)))
+  checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => coordinateFactory.get(i, index)))
+  checkBlock(index => Array.from({length: 9}, (_, i) => i).map(i => coordinateFactory.get(index, i)))
   checkBlock(index => {
     const xb = index % 3, yb = Math.floor(index / 3)
-    return Array.from({length: 3}, (_, y) => Array.from({length: 3}, (_, x) => new Coordinate(xb * 3 + x, yb * 3 + y))).flat(1)
+    return Array.from({length: 3}, (_, y) => Array.from({length: 3}, (_, x) => coordinateFactory.get(xb * 3 + x, yb * 3 + y))).flat(1)
   })
   return (
     <g>

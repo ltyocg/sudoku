@@ -36,10 +36,7 @@ function RestartButton() {
       <IconButton
         className={[classes.surface, classes.hover].join(' ')}
         title="重置"
-        onClick={() => {
-          history.reset()
-          dispatchEvent(new CustomEvent('app.reset-time'))
-        }}
+        onClick={() => setOpen(true)}
       >
         <Restart/>
       </IconButton>
@@ -48,6 +45,15 @@ function RestartButton() {
         onOpenChange={setOpen}
       >
         <h1 style={{textAlign: 'center'}}>重新开始</h1>
+        <button
+          onClick={() => {
+            history.reset()
+            dispatchEvent(new CustomEvent('app.reset-time'))
+            setOpen(false)
+          }}
+        >确定
+        </button>
+        <button onClick={() => setOpen(false)}>取消</button>
       </Dialog>
     </>
   )

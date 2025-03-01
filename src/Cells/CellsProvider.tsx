@@ -1,6 +1,5 @@
 import {createContext, type ReactNode, use, useMemo, useState} from 'react'
 import useHighlights from './useHighlights.tsx'
-import Coordinate from '../Coordinate.ts'
 import {arrayMap, initCellArray} from '../util.ts'
 
 interface Wrapper<T> {
@@ -68,7 +67,7 @@ const initialCellsTimeline: CellsTimeline = {
   index: 0
 }
 export default function CellsProvider({children}: { children: ReactNode }) {
-  const coordinateArray = [...useHighlights().checkedSet].map(i => new Coordinate(i))
+  const {checkedSet} = useHighlights()
   const [cellsTimeline, setCellsTimeline] = useState(initialCellsTimeline)
   const append = (state: CellsState) => setCellsTimeline(value => {
     const array = value.array.slice(0, cellsTimeline.index + 1).concat(state)
@@ -112,7 +111,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             let add = false
             const setterArray: (() => void)[] = []
             const colors = structuredClone(state.colors)
-            for (const {x, y} of coordinateArray) {
+            for (const {x, y} of checkedSet) {
               if (value === '') {
                 if (colors[y][x].length) setterArray.push(() => {
                   colors[y][x] = []
@@ -135,7 +134,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
               const pencilMarks = structuredClone(state.pencilMarks)
               const candidates = structuredClone(state.candidates)
               const values = structuredClone(state.values)
-              for (const {x, y} of coordinateArray) {
+              for (const {x, y} of checkedSet) {
                 if (pencilMarks[y][x].length) {
                   pencilMarks[y][x] = []
                   edit = true
@@ -160,7 +159,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             let add = false
             const setterArray: (() => void)[] = []
             const pencilMarks = structuredClone(state.pencilMarks)
-            for (const {x, y} of coordinateArray) {
+            for (const {x, y} of checkedSet) {
               if (givens[y][x]) continue
               if (value === '') {
                 if (pencilMarks[y][x].length) setterArray.push(() => {
@@ -184,7 +183,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
               const colors = structuredClone(state.colors)
               const candidates = structuredClone(state.candidates)
               const values = structuredClone(state.values)
-              for (const {x, y} of coordinateArray) {
+              for (const {x, y} of checkedSet) {
                 if (colors[y][x].length) {
                   colors[y][x] = []
                   edit = true
@@ -208,7 +207,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             let add = false
             const setterArray: (() => void)[] = []
             const candidates = structuredClone(state.candidates)
-            for (const {x, y} of coordinateArray) {
+            for (const {x, y} of checkedSet) {
               if (givens[y][x]) continue
               if (value === '') {
                 if (candidates[y][x].length) setterArray.push(() => {
@@ -232,7 +231,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
               const colors = structuredClone(state.colors)
               const pencilMarks = structuredClone(state.pencilMarks)
               const values = structuredClone(state.values)
-              for (const {x, y} of coordinateArray) {
+              for (const {x, y} of checkedSet) {
                 if (colors[y][x].length) {
                   colors[y][x] = []
                   edit = true
@@ -258,7 +257,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
             const pencilMarks = structuredClone(state.pencilMarks)
             const candidates = structuredClone(state.candidates)
             const values = structuredClone(state.values)
-            for (const {x, y} of coordinateArray) {
+            for (const {x, y} of checkedSet) {
               if (givens[y][x]) continue
               if (value === '') {
                 if (values[y][x] !== '') setterArray.push(() => {
@@ -283,7 +282,7 @@ export default function CellsProvider({children}: { children: ReactNode }) {
               const colors = structuredClone(state.colors)
               const pencilMarks = structuredClone(state.pencilMarks)
               const candidates = structuredClone(state.candidates)
-              for (const {x, y} of coordinateArray) {
+              for (const {x, y} of checkedSet) {
                 if (colors[y][x].length) {
                   colors[y][x] = []
                   edit = true
