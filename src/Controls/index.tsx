@@ -1,11 +1,11 @@
 import classes from './index.module.css'
-import {type CSSProperties, type RefObject} from 'react'
+import {type CSSProperties, type Ref} from 'react'
 import ControlsMain from './ControlsMain.tsx'
 import ControlsAuxiliary from './ControlsAuxiliary.tsx'
 import ControlsApp from './ControlsApp.tsx'
 
 export default function Controls({ref, style}: {
-  ref: RefObject<HTMLDivElement | null>
+  ref: Ref<HTMLDivElement | null>
   style: CSSProperties
 }) {
   const v = style.flexDirection === 'column'

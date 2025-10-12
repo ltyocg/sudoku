@@ -64,7 +64,7 @@ export default function Game() {
         && checkedSet.size) setCheckedSet(new Set())
     }, {signal: abortController.signal})
     return () => abortController.abort()
-  })
+  }, [checkedSet])
   return (
     <CellsProvider>
       <ControlsProvider>

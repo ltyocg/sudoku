@@ -31,7 +31,7 @@ export default function Cells({gridRef}: { gridRef?: Ref<HTMLDivElement> }) {
       setCheckedSet(new Set(coordinateFactory.all()))
     }, {signal: abortController.signal})
     return () => abortController.abort()
-  })
+  }, [])
   return (
     <div
       className={classes.cells}
@@ -94,7 +94,7 @@ export default function Cells({gridRef}: { gridRef?: Ref<HTMLDivElement> }) {
         viewBox="-48 -64 672 704"
       >
         <Colors array={colors.value}/>
-        <Highlights/>
+        <Highlights borderWidth={8}/>
         <Cages/>
         <Grid/>
         <Errors all={all}/>

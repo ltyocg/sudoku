@@ -39,8 +39,6 @@ export default function Errors({all}: { all: string[][] }) {
         return Object.values(o).filter(na => na.length > 1)
       })
       .flat(2)
-      .forEach(coordinate => {
-        errorArray[coordinate.y][coordinate.x] = true
-      })
+      .forEach(coordinate => errorArray[coordinate.y][coordinate.x] = true)
   }
 }

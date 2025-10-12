@@ -10,4 +10,8 @@ export default class Point {
   toTranslate(x: number, y: number) {
     return new Point(this.x + x, this.y + y)
   }
+
+  toString() {
+    return `${this.x},${this.y}`
+  }
 }

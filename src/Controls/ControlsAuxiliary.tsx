@@ -22,7 +22,7 @@ export default function ControlsAuxiliary({style}: { style: CSSProperties }) {
       }
     }, {signal: abortController.signal})
     return () => abortController.abort()
-  })
+  }, [history])
   return (
     <div
       className={classes.controlsAuxiliary}
