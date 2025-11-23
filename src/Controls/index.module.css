@@ -3,6 +3,7 @@
   display: flex;
   gap: .5rem;
   padding: 16px;
+  translate: -50% -50%;
 
   > div {
     display: flex;

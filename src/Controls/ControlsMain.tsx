@@ -190,7 +190,7 @@ function ColorKeyboard({onInput, onDelete}: {
           height="48"
         >
           <g
-            stroke="rgba(0 0 0 / 0.2)"
+            stroke="rgb(0 0 0 / 0.2)"
             strokeWidth={0.3}
             clipPath="inset(0.5rem 0.5rem 0.5rem 0.5rem round 0rem)"
           >

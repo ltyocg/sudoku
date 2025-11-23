@@ -28,7 +28,7 @@ function Thick() {
   const array = Array.from({length: 2}).map((_, index) => (index + 1) * 3)
   return (
     <path
-      stroke="rgba(0 0 0 / 1)"
+      stroke="rgb(0 0 0 / 1)"
       strokeWidth={3}
       d={[
         ...array.map(i => `M0 ${CELL_SIDE_LENGTH * i} H${CELL_SIDE_LENGTH * 9}`),

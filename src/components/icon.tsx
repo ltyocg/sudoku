@@ -319,8 +319,8 @@ export function Select() {
       />
       <path
         transform="translate(2.9, 2.9) scale(0.0935)"
-        fill="rgba(255 215 0 / 0.5)"
-        stroke="rgba(0, 126, 255, 1)"
+        fill="rgb(255 215 0 / 0.5)"
+        stroke="rgb(0 126 255 / 1)"
         strokeWidth="15"
         strokeLinecap="butt"
         strokeLinejoin="round"

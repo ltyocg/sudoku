@@ -1,4 +1,4 @@
-import {type CSSProperties, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import {type CSSProperties, useEffect, useRef, useState} from 'react'
 import classes from './Game.module.css'
 import {ControlsProvider} from '../Controls/useControls.tsx'
 import CellsProvider from '../Cells/CellsProvider.tsx'
@@ -14,7 +14,7 @@ export default function Game() {
   const controlsRef = useRef<HTMLDivElement>(null)
   const [controlsStyle, setControlsStyle] = useState<CSSProperties>({})
   const {checkedSet, setCheckedSet} = useHighlights()
-  useLayoutEffect(() => {
+  useEffect(() => {
     const element = ref.current, boardElement = boardRef.current, controlsElement = controlsRef.current
     if (!(element && boardElement && controlsElement)) return
     const listener = (width: number, height: number) => {
@@ -39,12 +39,12 @@ export default function Game() {
         controls.left = width / 2
       }
       setBoardStyle({
-        transform: `translate(-50%, -50%) scale(${board.scale})`,
+        transform: `scale(${board.scale})`,
         top: board.top,
         left: board.left
       })
       setControlsStyle({
-        transform: `translate(-50%, -50%) scale(${controls.scale})`,
+        transform: `scale(${controls.scale})`,
         top: controls.top,
         left: controls.left,
         flexDirection: controls.flexDirection

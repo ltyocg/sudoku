@@ -1,6 +1,6 @@
 .value {
   font-size: 3rem;
-  stroke: rgba(158 193 260 / 0.7);
+  stroke: rgb(158 193 260 / 0.7);
   color: var(--cell-value-color);
   fill: var(--cell-value-color);
 }

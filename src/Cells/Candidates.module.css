@@ -1,7 +1,7 @@
 .candidate {
   font-size: 1.3rem;
   stroke-width: 1px;
-  stroke: rgba(158 193 260 / 0.7);
+  stroke: rgb(158 193 260 / 0.7);
   fill: var(--cell-value-color);
 
   > .conflict {

@@ -27,6 +27,7 @@ export default function Highlights({borderWidth}: { borderWidth: number }) {
         const {x, y} = simplified[i]
         pr.push('L' + x, y)
       }
+      pr.push('Z')
       return pr.join(' ')
     }).join(' ')
   })()
@@ -34,8 +35,8 @@ export default function Highlights({borderWidth}: { borderWidth: number }) {
     <g>
       {!!pathData && (
         <path
-          fill="rgba(255 255 255 / 0.4)"
-          stroke="rgba(0 126 255 / 0.7)"
+          fill="rgb(255 255 255 / 0.4)"
+          stroke="rgb(0 126 255 / 0.7)"
           strokeWidth={borderWidth}
           strokeLinecap="butt"
           strokeLinejoin="round"

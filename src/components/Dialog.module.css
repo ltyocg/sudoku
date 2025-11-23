@@ -3,6 +3,6 @@
   border-radius: 0.5rem;
 
   &::backdrop {
-    background-color: rgba(60 60 60 / 0.7);
+    background-color: rgb(60 60 60 / 0.7);
   }
 }
